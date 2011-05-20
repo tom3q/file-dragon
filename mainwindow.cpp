@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "treemapwidget.h"
 #include "filefilter.h"
+#include "osoperations.h"
 
 /**
   * Main window constructor.
@@ -15,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Add menus and other shit...
     createActions();
     createMenus();
+    fillComboPartition();
 
     // Add a TreemapWidget to a form
     treemap = new TreemapWidget(this);
@@ -29,6 +31,13 @@ MainWindow::~MainWindow()
 {
     delete treemap;
     delete ui;
+
+    delete actScan;
+    delete actUndo;
+    delete actRedo;
+    delete actApply;
+    delete comboPartition;
+    delete stretchWidget;
 }
 
 /**
@@ -39,6 +48,15 @@ void MainWindow::createActions()
     actScan = new QAction(tr("Scan"), this);
     actScan->setStatusTip(tr("Scans a selected partition"));
     connect(actScan, SIGNAL(triggered()), this, SLOT(scanClicked()));
+
+    actUndo = new QAction(tr("Undo"), this);
+    actUndo->setStatusTip(tr("Undoes the file operation"));
+
+    actRedo = new QAction(tr("Redo"), this);
+    actRedo->setStatusTip(tr("Redoes a file operation"));
+
+    actApply = new QAction(tr("Apply"), this);
+    actApply->setStatusTip(tr("Executes all file operations"));
 }
 
 /**
@@ -48,6 +66,29 @@ void MainWindow::createMenus()
 {
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction(actScan);
+    ui->mainToolBar->addSeparator();
+    ui->mainToolBar->addAction(actUndo);
+    ui->mainToolBar->addAction(actRedo);
+    ui->mainToolBar->addSeparator();
+    ui->mainToolBar->addAction(actApply);
+
+    stretchWidget = new QLabel(this);
+    stretchWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+    ui->mainToolBar->addWidget(stretchWidget);
+    stretchWidget->show();
+
+    comboPartition = new QComboBox(this);
+    ui->mainToolBar->addWidget(comboPartition);
+    comboPartition->show();
+}
+
+void MainWindow::fillComboPartition()
+{
+    QStringList list = OSOperations::diskList();
+
+    comboPartition->clear();
+    for (int i=0; i<list.size(); i++)
+        comboPartition->addItem(list.at(i));
 }
 
 /**
@@ -56,10 +97,10 @@ void MainWindow::createMenus()
 void MainWindow::scanClicked()
 {
     FileTree &tree = treemap->getFileTree();
-    tree.buildTree("/home/");
+    tree.buildTree( comboPartition->currentText() );
 
     FileFilter filter;
-    filter.setMinimumSize(1024 * 100);
+    filter.setMinimumSize(1024 * 1024 * 1);
     tree.filter(filter);
 
     //tree.printFiles();

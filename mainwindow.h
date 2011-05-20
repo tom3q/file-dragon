@@ -26,11 +26,17 @@ protected:
 private:
     void createActions();
     void createMenus();
+    void fillComboPartition();
 
     FileTree *tree;
     Ui::MainWindow *ui;
     TreemapWidget *treemap;
+    QComboBox *comboPartition;
+    QLabel *stretchWidget;
     QAction *actScan;
+    QAction *actUndo;
+    QAction *actRedo;
+    QAction *actApply;
 };
 
 #endif // MAINWINDOW_H
