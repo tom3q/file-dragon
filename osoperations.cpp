@@ -16,7 +16,7 @@ OSOperations::OSOperations()
   * @return QStringList containing paths..
   */
 
-#if BUILD_PLATFORM == LINUX_BUILD
+#if defined(LINUX_BUILD) && (BUILD_PLATFORM == LINUX_BUILD)
 
 QStringList OSOperations::diskList()
 {
@@ -50,11 +50,23 @@ QStringList OSOperations::diskList()
     return list;
 }
 
-#elif BUILD_PLATFORM == WINDOWS_BUILD
+#elif defined(_WINDOWS)
+
+#include <QDir>
+#include <QFile>
+
+using namespace std;
 
 QStringList OSOperations::diskList()
 {
-    return QStringList();
+	QFileInfoList flist = QDir::drives();
+	QFileInfoList::const_iterator i;
+	QStringList list;
+
+	for (i = flist.constBegin(); i != flist.end(); ++i)
+		list.append(i->absolutePath());
+
+	return list;
 }
 
 #else
