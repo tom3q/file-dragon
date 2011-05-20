@@ -19,6 +19,9 @@ public:
     void buildTree(QString);
     void clear();
     void filter(FileFilter &);
+    bool isEmpty() const;
+
+    DirectoryNode *getRoot() const;
 
     void printFiles();
 

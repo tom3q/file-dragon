@@ -56,13 +56,13 @@ void MainWindow::createMenus()
 void MainWindow::scanClicked()
 {
     FileTree &tree = treemap->getFileTree();
-    tree.buildTree("/media/disc2/Obrazy");
+    tree.buildTree("/home/");
 
     FileFilter filter;
-    filter.setMaximumSize(1024 * 500);
+    filter.setMinimumSize(1024 * 100);
     tree.filter(filter);
 
-    tree.printFiles();
+    //tree.printFiles();
 }
 
 void MainWindow::changeEvent(QEvent *e)

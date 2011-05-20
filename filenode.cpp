@@ -1,12 +1,18 @@
+/**
+  * Holds file-related information.
+  */
+
 #include <QFileInfo>
 #include "filenode.h"
 
 FileNode::FileNode()
 {
     ext_ = "";
-    filtered_ = false;
 }
 
+/**
+  * When file name is set, extension is also remembered.
+  */
 void FileNode::setName(QString name)
 {
     AbstractNode::setName(name);
@@ -17,14 +23,4 @@ void FileNode::setName(QString name)
 QString FileNode::getExtension() const
 {
     return ext_;
-}
-
-void FileNode::setFiltered(bool b)
-{
-    filtered_ = b;
-}
-
-bool FileNode::isFiltered() const
-{
-    return filtered_;
 }

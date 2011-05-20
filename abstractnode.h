@@ -14,13 +14,13 @@ public:
     void setName(QString);
     QString getName() const;
 
-    void setSize(long);
-    long getSize() const;
+    void setSize(double);
+    double getSize() const;
 
 private:
     AbstractNode *parent_;
     QString name_;
-    long size_;
+    double size_;
 };
 
 #endif // ABSTRACTNODE_H

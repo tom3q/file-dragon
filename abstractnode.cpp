@@ -1,3 +1,9 @@
+/**
+  * AbstractNode is a class from which DirectoryNode and FileNode
+    inherit. This class 2 attributes - size and name - both used
+    by subclasses.
+  */
+
 #include "abstractnode.h"
 
 AbstractNode::AbstractNode()
@@ -26,12 +32,12 @@ QString AbstractNode::getName() const
     return name_;
 }
 
-void AbstractNode::setSize(long size)
+void AbstractNode::setSize(double size)
 {
     size_ = size;
 }
 
-long AbstractNode::getSize() const
+double AbstractNode::getSize() const
 {
     return size_;
 }

@@ -8,16 +8,16 @@ class FileFilter
 public:
     FileFilter();
 
-    void setMaximumSize(long);
-    long getMaximumSize() const;
+    void setMaximumSize(double);
+    double getMaximumSize() const;
 
-    void setMinimumSize(long);
-    long getMinimumSize() const;
+    void setMinimumSize(double);
+    double getMinimumSize() const;
 
     bool checkFile(FileNode *);
 
 private:
-    long sizeMin_, sizeMax_;
+    double sizeMin_, sizeMax_;
 };
 
 #endif // FILEFILTER_H

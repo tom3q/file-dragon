@@ -1,3 +1,11 @@
+/**
+  * Class used to filter files in a FileTree class. In order to
+    filter files, call FileTree::filter(FileFilter). FileFilter
+    class holds parameters used during filtration (eg. file size)
+    and uses checkFile(FileNode*) method to determine if a given
+    file "passes" the selection or not.
+  */
+
 #include "filefilter.h"
 
 FileFilter::FileFilter()
@@ -6,29 +14,34 @@ FileFilter::FileFilter()
     sizeMax_ = 0;
 }
 
-void FileFilter::setMaximumSize(long s)
+void FileFilter::setMaximumSize(double s)
 {
     sizeMax_ = s;
 }
 
-long FileFilter::getMaximumSize() const
+double FileFilter::getMaximumSize() const
 {
     return sizeMax_;
 }
 
-void FileFilter::setMinimumSize(long s)
+void FileFilter::setMinimumSize(double s)
 {
     sizeMin_ = s;
 }
 
-long FileFilter::getMinimumSize() const
+double FileFilter::getMinimumSize() const
 {
     return sizeMin_;
 }
 
+/**
+  * Checks if a file passes the filtration rules.
+  * @param file FileNode pointer.
+  * @return True if passes, False if not.
+  */
 bool FileFilter::checkFile(FileNode *file)
 {
-    long fileSize = file->getSize();
+    double fileSize = file->getSize();
 
     if (fileSize < sizeMin_)
         return false;

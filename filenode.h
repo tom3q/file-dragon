@@ -12,12 +12,8 @@ public:
     void setName(QString);
     QString getExtension() const;
 
-    void setFiltered(bool);
-    bool isFiltered() const;
-
 private:
     QString ext_;
-    bool filtered_;
 };
 
 #endif // FILENODE_H

@@ -1,3 +1,13 @@
+/**
+  * DirectoryNode holds typical directory information - name, size,
+    its files and subdirs. Files are located in two vector objects:
+    files_ and unfilteredFiles_. First container stores real
+    directory structure. unfilteredFiles_ holds only files which
+    weren't filtered out during the filtration process. From the
+    user side, only unfiltered files are accessible. The filtration
+    process is done by a friend class FileTree.
+  */
+
 #include "directorynode.h"
 
 DirectoryNode::DirectoryNode()
@@ -23,15 +33,16 @@ int DirectoryNode::getDirCount() const
 void DirectoryNode::addFile(FileNode *file)
 {
     files_.push_back(file);
+    unfilteredFiles_.push_back(file);
     file->setParent(this);
 }
 
 FileNode *DirectoryNode::getFile(int index) const
 {
-    return files_[index];
+    return unfilteredFiles_[index];
 }
 
 int DirectoryNode::getFileCount() const
 {
-    return files_.size();
+    return unfilteredFiles_.size();
 }

@@ -2,6 +2,7 @@
 #define DIRECTORYNODE_H
 
 #include <vector>
+
 #include "abstractnode.h"
 #include "filenode.h"
 #include "filetree.h"
