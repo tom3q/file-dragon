@@ -10,11 +10,13 @@ using namespace std;
 FileTree::FileTree()
 {
     root_ = 0;
+	filter_ = new FileFilter();
 }
 
 FileTree::~FileTree()
 {
     clear();
+	delete filter_;
 }
 
 /**
@@ -26,6 +28,7 @@ void FileTree::buildTree(QString path)
 {
     clear();
     root_ = createDir(path);
+	filterDir(root_);
     emit treeUpdated();
 }
 
@@ -46,6 +49,21 @@ void FileTree::clear(DirectoryNode *dir)
         delete dir->files_[i];
     for (int i=0; i<dir->getDirCount(); i++)
         clear(dir->getDir(i));
+}
+
+/**
+  *	Sets a file filter for the file tree. Filtration hides files,
+	which do not match filter criteria. Emits treeUpdated signal.
+  */
+void FileTree::setFilter(FileFilter &f)
+{
+	*filter_ = f;
+
+	if (root_ != 0)
+	{
+		filterDir(root_);
+		emit treeUpdated();
+	}
 }
 
 /**
@@ -102,16 +120,10 @@ DirectoryNode *FileTree::createDir(QString path)
     vector. During the filtration, directory sizes are updated
     (they don't take "filtered" nodes into account). Emits
     treeUpdated() signal.
+  * @param currentDir A directory to be filtered.
   * @param fileFilter Filter object used to filter files.
   */
-void FileTree::filter(FileFilter &fileFilter)
-{
-    if (root_ == 0) return;
-    filter(root_, fileFilter);
-    emit treeUpdated();
-}
-
-void FileTree::filter(DirectoryNode *currentDir, FileFilter &fileFilter)
+void FileTree::filterDir(DirectoryNode *currentDir)
 {
     DirectoryNode *dir;
     FileNode *file;
@@ -122,7 +134,7 @@ void FileTree::filter(DirectoryNode *currentDir, FileFilter &fileFilter)
     for (unsigned int i=0; i<currentDir->files_.size(); i++)
     {
         file = currentDir->files_[i];
-        if (fileFilter.checkFile(file))
+		if (filter_->checkFile(file))
         {
             currentDir->unfilteredFiles_.push_back(file);
             sizeSum += file->getSize();
@@ -131,7 +143,7 @@ void FileTree::filter(DirectoryNode *currentDir, FileFilter &fileFilter)
     for (int i=0; i<currentDir->getDirCount(); i++)
     {
         dir = currentDir->getDir(i);
-        filter(dir, fileFilter);
+		filterDir(dir);
         sizeSum += dir->getSize();
     }
 

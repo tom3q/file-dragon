@@ -22,6 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
     treemap = new TreemapWidget(this);
     ui->horizontalLayout->addWidget(treemap);
     treemap->show();
+
+	// Create a filter dialog
+	filterDialog = new FilterDialog(this, &treemap->getFileTree());
 }
 
 /**
@@ -29,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
   */
 MainWindow::~MainWindow()
 {
+	delete filterDialog;
     delete treemap;
     delete ui;
 
@@ -98,12 +102,6 @@ void MainWindow::scanClicked()
 {
     FileTree &tree = treemap->getFileTree();
     tree.buildTree( comboPartition->currentText() );
-
-    FileFilter filter;
-    filter.setMinimumSize(1024 * 1024 * 1);
-    tree.filter(filter);
-
-    //tree.printFiles();
 }
 
 void MainWindow::changeEvent(QEvent *e)
@@ -116,4 +114,9 @@ void MainWindow::changeEvent(QEvent *e)
     default:
         break;
     }
+}
+
+void MainWindow::on_actionFilters_triggered()
+{
+	filterDialog->show();
 }

@@ -16,7 +16,7 @@ OSOperations::OSOperations()
   * @return QStringList containing paths..
   */
 
-#if defined(LINUX_BUILD) && (BUILD_PLATFORM == LINUX_BUILD)
+#if defined(__linux__)
 
 QStringList OSOperations::diskList()
 {

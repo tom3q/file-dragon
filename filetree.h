@@ -18,7 +18,7 @@ public:
 
     void buildTree(QString);
     void clear();
-    void filter(FileFilter &);
+	void setFilter(FileFilter &);
     bool isEmpty() const;
 
     DirectoryNode *getRoot() const;
@@ -31,10 +31,11 @@ signals:
 private: 
     DirectoryNode *createDir(QString);
     void clear(DirectoryNode *);
-    void filter(DirectoryNode *, FileFilter &);
+	void filterDir(DirectoryNode *);
     void printFiles(DirectoryNode *);
 
     DirectoryNode *root_;
+	FileFilter *filter_;
 };
 
 #endif // FILETREE_H

@@ -27,11 +27,18 @@
    </property>
    <widget class="QMenu" name="menuPlik">
     <property name="title">
-     <string>File</string>
+     <string>Program</string>
     </property>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionFilters"/>
+   </widget>
    <addaction name="menuPlik"/>
+   <addaction name="menuSettings"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="mainToolBar">
@@ -51,6 +58,11 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionFilters">
+   <property name="text">
+    <string>Filters...</string>
    </property>
   </action>
  </widget>

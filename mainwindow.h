@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+
+#include "filterdialog.h"
 #include "treemapwidget.h"
 #include "filetree.h"
 
@@ -23,13 +25,17 @@ public slots:
 protected:
     void changeEvent(QEvent *e);
 
+private slots:
+	void on_actionFilters_triggered();
+
 private:
     void createActions();
     void createMenus();
     void fillComboPartition();
 
+	Ui::MainWindow *ui;
+	FilterDialog *filterDialog;
     FileTree *tree;
-    Ui::MainWindow *ui;
     TreemapWidget *treemap;
     QComboBox *comboPartition;
     QLabel *stretchWidget;
