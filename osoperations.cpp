@@ -3,8 +3,6 @@
     depending on the operating system.
   */
 
-#include <cstdio>
-#include <string.h>
 #include "osoperations.h"
 
 OSOperations::OSOperations()
@@ -17,6 +15,10 @@ OSOperations::OSOperations()
   */
 
 #if defined(__linux__)
+
+#include <cstdio>
+#include <cstring>
+#include <cassert>
 
 QStringList OSOperations::diskList()
 {
@@ -50,10 +52,16 @@ QStringList OSOperations::diskList()
     return list;
 }
 
+qint64 OSOperations::getUsedSpace(const QString &disk)
+{
+	assert(0); // unimplemented
+}
+
 #elif defined(_WINDOWS)
 
 #include <QDir>
 #include <QFile>
+#include <Windows.h>
 
 using namespace std;
 
@@ -67,6 +75,13 @@ QStringList OSOperations::diskList()
 		list.append(i->absolutePath());
 
 	return list;
+}
+
+qint64 OSOperations::getUsedSpace(const QString &disk)
+{
+	ULARGE_INTEGER total, free;
+	GetDiskFreeSpaceExW(disk.toStdWString().c_str(), &free, &total, 0);
+	return total.QuadPart - free.QuadPart;
 }
 
 #else
