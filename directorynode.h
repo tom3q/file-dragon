@@ -14,7 +14,7 @@ class DirectoryNode : public AbstractNode
 public:
     DirectoryNode();
 
-	DirectoryNode *DirectoryNode::addDir(const QString &);
+	DirectoryNode *addDir(const QString &);
 	void clear();
     DirectoryNode *getDir(int) const;
     int getDirCount() const;

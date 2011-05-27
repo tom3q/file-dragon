@@ -1,7 +1,7 @@
 #include "coloringdialog.h"
 #include "ui_coloringdialog.h"
-#include "cellrenderer.h"
-#include "datecellrenderer.h"
+#include "defaultrenderer.h"
+#include "daterenderer.h"
 
 ColoringDialog::ColoringDialog(QWidget *parent, TreemapWidget *cd) :
     QDialog(parent),
@@ -35,13 +35,13 @@ void ColoringDialog::on_pushButton_clicked()
 
 void ColoringDialog::on_pushButton_2_clicked()
 {
-	CellRenderer *renderer;
+	DefaultRenderer *renderer;
 
 	if (ui->radioButton->isChecked())
-		renderer = new CellRenderer(treeWidget_);
+		renderer = new DefaultRenderer(treeWidget_);
 	else if (ui->radioButton_2->isChecked())
-		renderer = new DateCellRenderer(treeWidget_);
+		renderer = new DateRenderer(treeWidget_);
 
 	hide();
-	treeWidget_->setCellRenderer(renderer);
+	treeWidget_->setRenderer(renderer);
 }
