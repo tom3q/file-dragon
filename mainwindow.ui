@@ -27,7 +27,7 @@
    </property>
    <widget class="QMenu" name="menuPlik">
     <property name="title">
-     <string>Program</string>
+     <string>File</string>
     </property>
     <addaction name="actionExit"/>
    </widget>
@@ -36,9 +36,17 @@
      <string>Settings</string>
     </property>
     <addaction name="actionFilters"/>
+    <addaction name="actionCell_coloring"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuPlik"/>
    <addaction name="menuSettings"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="mainToolBar">
@@ -63,6 +71,16 @@
   <action name="actionFilters">
    <property name="text">
     <string>Filters...</string>
+   </property>
+  </action>
+  <action name="actionCell_coloring">
+   <property name="text">
+    <string>Cell coloring...</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>

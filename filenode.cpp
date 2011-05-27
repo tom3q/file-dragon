@@ -15,6 +15,7 @@ FileNode::FileNode(const QFileInfo &info)
 	AbstractNode::setName(info.absoluteFilePath());
 	setSize(info.size());
 	ext_ = info.completeSuffix();
+	modified_ = info.lastModified();
 }
 
 /**
@@ -30,4 +31,14 @@ void FileNode::setName(const QString &name)
 QString FileNode::getExtension() const
 {
     return ext_;
+}
+
+void FileNode::setModified(QDateTime time)
+{
+	modified_ = time;
+}
+
+QDateTime FileNode::getModified() const
+{
+	return modified_;
 }

@@ -62,6 +62,7 @@ public:
 public slots:
 	/**
 	  * This slot is called when FileTree changes its contents.
+		Clears selection and redraws the widget.
 	  */
     void fileTreeUpdated();
 

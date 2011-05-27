@@ -24,11 +24,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->horizontalLayout->addWidget(treemap);
     treemap->show();
     
-	// Create tree manager thread
-	treeManager = new TreeManager(treemap->getFileTree());
-
 	// Create a filter dialog
 	filterDialog = new FilterDialog(this, &treemap->getFileTree());
+
+	// Create coloring dialog
+	coloringDialog = new ColoringDialog(this, treemap);
+	// Create tree manager thread
+	treeManager = new TreeManager(treemap->getFileTree());
 
 	// Create event chain for scan action
 	connect(actScan, SIGNAL(triggered()), this, SLOT(scanClicked()),  Qt::QueuedConnection);
@@ -150,4 +152,9 @@ void MainWindow::changeEvent(QEvent *e)
 void MainWindow::on_actionFilters_triggered()
 {
 	filterDialog->show();
+}
+
+void MainWindow::on_actionCell_coloring_triggered()
+{
+	coloringDialog->show();
 }

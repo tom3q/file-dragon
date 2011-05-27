@@ -21,6 +21,8 @@ SOURCES += main.cpp\
     cellrenderer.cpp \
     osoperations.cpp \
     filterdialog.cpp \
+    coloringdialog.cpp \
+    datecellrenderer.cpp \
     treemanager.cpp
 
 HEADERS  += mainwindow.h \
@@ -33,8 +35,11 @@ HEADERS  += mainwindow.h \
     cellrenderer.h \
     osoperations.h \
     filterdialog.h \
+    coloringdialog.h \
+    datecellrenderer.h \
+    filterdialog.h \
     treemanager.h
 
 FORMS    += mainwindow.ui \
-    filterdialog.ui
-
+    filterdialog.ui \
+    coloringdialog.ui
