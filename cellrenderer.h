@@ -16,7 +16,7 @@ public:
 		rectangle is selected or not.
 	  *	@param w A pointer to a TreemapWidget
 	  */
-	CellRenderer(TreemapWidget *);
+	CellRenderer(TreemapWidget *w);
 
 	/**
 	  * Rendering method.
@@ -24,7 +24,7 @@ public:
 	  * @param rect A rectangle where a file is drawn
 	  * @param file A pointer to FileNode structure
 	  */
-	void render(QPainter &painter, QRectF &rect, FileNode *file);
+	virtual void render(QPainter &painter, QRectF &rect, FileNode *file);
 
 private:
 	TreemapWidget *widget_;

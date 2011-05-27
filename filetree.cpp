@@ -88,6 +88,7 @@ DirectoryNode *FileTree::createDir(QString path)
         FileNode *fileNode = new FileNode();
         fileNode->setName(info.absoluteFilePath());
         fileNode->setSize(info.size());
+		fileNode->setModified(info.lastModified());
         sizeSum += fileNode->getSize();
 
         newNode->addFile(fileNode);

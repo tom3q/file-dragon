@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "filterdialog.h"
+#include "coloringdialog.h"
 #include "treemapwidget.h"
 #include "filetree.h"
 
@@ -28,6 +29,8 @@ protected:
 private slots:
 	void on_actionFilters_triggered();
 
+	void on_actionCell_coloring_triggered();
+
 private:
     void createActions();
     void createMenus();
@@ -35,6 +38,7 @@ private:
 
 	Ui::MainWindow *ui;
 	FilterDialog *filterDialog;
+	ColoringDialog *coloringDialog;
     FileTree *tree;
     TreemapWidget *treemap;
     QComboBox *comboPartition;

@@ -25,6 +25,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Create a filter dialog
 	filterDialog = new FilterDialog(this, &treemap->getFileTree());
+
+	// Create coloring dialog
+	coloringDialog = new ColoringDialog(this, treemap);
 }
 
 /**
@@ -119,4 +122,9 @@ void MainWindow::changeEvent(QEvent *e)
 void MainWindow::on_actionFilters_triggered()
 {
 	filterDialog->show();
+}
+
+void MainWindow::on_actionCell_coloring_triggered()
+{
+	coloringDialog->show();
 }

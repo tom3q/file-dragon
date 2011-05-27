@@ -29,9 +29,13 @@ TreemapWidget::~TreemapWidget()
 
 void TreemapWidget::setCellRenderer(CellRenderer *cr)
 {
-    if (renderer_ != 0)
-        delete renderer_;
-    renderer_ = cr;
+	CellRenderer *ptr = renderer_;
+	renderer_ = cr;
+
+	if (ptr != 0)
+		delete ptr;
+
+	repaint();
 }
 
 FileTree &TreemapWidget::getFileTree() const
@@ -77,10 +81,10 @@ void TreemapWidget::mousePressEvent(QMouseEvent *event)
 void TreemapWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
-    painter.setBrush(QColor(180, 180, 160));
 
     // ramka
     QSize size = event->rect().size();
+	painter.setBrush(QColor(244, 241, 217));
     painter.drawRect(0, 0, size.width()-1, size.height()-1);
 
     if (!tree_->isEmpty())
