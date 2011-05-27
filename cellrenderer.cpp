@@ -17,9 +17,10 @@ CellRenderer::CellRenderer(TreemapWidget *w)
 void CellRenderer::render(QPainter &painter, QRectF &rect, FileNode *file)
 {
 	if (widget_->isSelected(file))
-		painter.setBrush(QColor(250, 250, 230));
+		painter.setBrush(QColor(COLOR_R+HIGHLIGHT, COLOR_G+HIGHLIGHT,
+								COLOR_B+HIGHLIGHT));
 	else
-		painter.setBrush(QColor(220, 220, 200));
+		painter.setBrush(QColor(COLOR_R, COLOR_G, COLOR_B));
 
     painter.drawRect(rect);
 }

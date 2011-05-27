@@ -42,6 +42,6 @@ void ColoringDialog::on_pushButton_2_clicked()
 	else if (ui->radioButton_2->isChecked())
 		renderer = new DateCellRenderer(treeWidget_);
 
-	treeWidget_->setCellRenderer(renderer);
 	hide();
+	treeWidget_->setCellRenderer(renderer);
 }

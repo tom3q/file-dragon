@@ -1,24 +1,26 @@
 #include "datecellrenderer.h"
-#include "cellrenderer.h"
+#include "treemapwidget.h"
 
 DateCellRenderer::DateCellRenderer(TreemapWidget *w) :
 	CellRenderer(w)
 {
+	now_ = QDateTime::currentDateTime();
 }
 
 void DateCellRenderer::render(QPainter &painter, QRectF &rect, FileNode *file)
 {
-	int colorNew[] = {47, 203, 39};
-	int colorOld[] = {24, 93, 26};
-	QDateTime now = QDateTime::currentDateTime();
-	int days = file->getModified().daysTo(now);
+	int days = file->getModified().daysTo(now_);
 	float ratio = (float) days / (5*365);
 	if (ratio > 1) ratio = 1;
 
-	int r = (colorOld[0]-colorNew[0]) * ratio + colorNew[0];
-	int g = (colorOld[1]-colorNew[1]) * ratio + colorNew[1];
-	int b = (colorOld[2]-colorNew[2]) * ratio + colorNew[2];
+	int r = (OLD_R-NEW_R) * ratio + NEW_R;
+	int g = (OLD_G-NEW_G) * ratio + NEW_G;
+	int b = (OLD_B-NEW_B) * ratio + NEW_B;
 
-	painter.setBrush(QColor(r, g, b));
+	if (widget_->isSelected(file))
+		painter.setBrush(QColor(r+HIGHLIGHT, g+HIGHLIGHT, b+HIGHLIGHT));
+	else
+		painter.setBrush(QColor(r, g, b));
+
 	painter.drawRect(rect);
 }
