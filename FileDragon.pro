@@ -35,3 +35,4 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     filterdialog.ui
+
