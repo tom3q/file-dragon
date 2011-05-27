@@ -37,6 +37,8 @@ private slots:
 
 	void on_actionCell_coloring_triggered();
 
+	void on_actionShow_legend_changed();
+
 private:
     void createActions();
     void createMenus();

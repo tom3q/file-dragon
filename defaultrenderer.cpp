@@ -6,15 +6,15 @@
     drawing cells.
   */
 
-#include "cellrenderer.h"
+#include "defaultrenderer.h"
 #include "treemapwidget.h"
 
-CellRenderer::CellRenderer(TreemapWidget *w)
+DefaultRenderer::DefaultRenderer(TreemapWidget *w)
 {
 	widget_ = w;
 }
 
-void CellRenderer::render(QPainter &painter, QRectF &rect, FileNode *file)
+void DefaultRenderer::renderCell(QPainter &painter, QRectF &rect, FileNode *file)
 {
 	if (widget_->isSelected(file))
 		painter.setBrush(QColor(COLOR_R+HIGHLIGHT, COLOR_G+HIGHLIGHT,
@@ -23,4 +23,13 @@ void CellRenderer::render(QPainter &painter, QRectF &rect, FileNode *file)
 		painter.setBrush(QColor(COLOR_R, COLOR_G, COLOR_B));
 
     painter.drawRect(rect);
+}
+
+void DefaultRenderer::renderLegend(QPainter &painter, QRectF &rect)
+{
+}
+
+bool DefaultRenderer::hasLegend() const
+{
+	return false;
 }

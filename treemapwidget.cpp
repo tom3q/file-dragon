@@ -11,13 +11,15 @@ using namespace std;
 TreemapWidget::TreemapWidget(QWidget *parent) :
     QWidget(parent)
 {
-    setAutoFillBackground(false);
+	setAutoFillBackground(true);
 
     // create file tree and connect signals-slots
     tree_ = new FileTree();
 
     // create a cell renderer
-	renderer_ = new CellRenderer(this);
+	renderer_ = new DefaultRenderer(this);
+
+	showLegend_ = false;
 }
 
 TreemapWidget::~TreemapWidget()
@@ -26,9 +28,9 @@ TreemapWidget::~TreemapWidget()
     delete renderer_;
 }
 
-void TreemapWidget::setCellRenderer(CellRenderer *cr)
+void TreemapWidget::setRenderer(DefaultRenderer *cr)
 {
-	CellRenderer *ptr = renderer_;
+	DefaultRenderer *ptr = renderer_;
 	renderer_ = cr;
 
 	if (ptr != 0)
@@ -59,6 +61,12 @@ bool TreemapWidget::isSelected(FileNode *node) const
 	return selectedNodes_.find(node) != selectedNodes_.end();
 }
 
+void TreemapWidget::setShowLegend(bool show)
+{
+	showLegend_ = show;
+	repaint();
+}
+
 void TreemapWidget::mousePressEvent(QMouseEvent *event)
 {
 	if (event->button() == Qt::LeftButton)
@@ -80,23 +88,33 @@ void TreemapWidget::mousePressEvent(QMouseEvent *event)
 void TreemapWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
-
-	// czarne wypełnienie
 	QSize size = event->rect().size();
+	QRectF rectangle;
+
+	// if legend is shown, change filetree rectangle to smaller and
+	// render legend above it
+	if (showLegend_ && renderer_->hasLegend())
+	{
+		rectangle.setRect(0, LEGEND_HEIGHT+LEGEND_MARGIN, size.width()-1,
+						  size.height()-1-LEGEND_HEIGHT-LEGEND_MARGIN);
+		QRectF legendRect(0, 0, size.width()-1, LEGEND_HEIGHT);
+		renderer_->renderLegend(painter, legendRect);
+	}
+	else
+		rectangle.setRect(0, 0, size.width()-1, size.height()-1);
+
+	// black filling
 	painter.setBrush(QColor(0, 0, 0));
-	painter.drawRect(0, 0, size.width()-1, size.height()-1);
+	painter.drawRect(rectangle);
 
 	// draw tree
     if (!tree_->isEmpty())
-	{
-		QRectF rect(0, 0, size.width()-1, size.height()-1);
-		drawDirVert(painter, rect, tree_->getRoot());
-    }
-	// draw nice filling
+		drawDirVert(painter, rectangle, tree_->getRoot());
+	// draw simple filling
 	else
 	{
 		painter.setBrush(QColor(0xDF, 0xDF, 0xDF));
-		painter.drawRect(0, 0, size.width()-1, size.height()-1);
+		painter.drawRect(rectangle);
 	}
 }
 
@@ -118,7 +136,7 @@ void TreemapWidget::drawDirVert(QPainter &painter, QRectF &rect, DirectoryNode *
         newRect.setRect(rect.x()+offset, rect.y(), rectWidth, rect.height());
 
 		if (newRect.width() >= 1 && newRect.height() >= 1)
-			renderer_->render(painter, newRect, dir->getFile(i));
+			renderer_->renderCell(painter, newRect, dir->getFile(i));
         offset += rectWidth;
     }
 
@@ -146,7 +164,7 @@ void TreemapWidget::drawDirHorz(QPainter &painter, QRectF &rect, DirectoryNode *
         newRect.setRect(rect.x(), rect.y()+offset, rect.width(), rectHeight);
 
 		if (newRect.height() >= 1 && newRect.width() >= 1)
-			renderer_->render(painter, newRect, dir->getFile(i));
+			renderer_->renderCell(painter, newRect, dir->getFile(i));
         offset += rectHeight;
     }
 
@@ -170,6 +188,11 @@ FileNode *TreemapWidget::detectFile(int x, int y)
 	int vert = 1;
 
 	if (dir == 0) return 0;
+
+	// if legend is shown, drawing is moved down and detection rectangle
+	// also should be moved down
+	if (showLegend_ && renderer_->hasLegend())
+		dirRect.setY(LEGEND_HEIGHT+LEGEND_MARGIN);
 
 	while (true)
 	{
