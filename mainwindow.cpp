@@ -3,6 +3,7 @@
 #include "treemapwidget.h"
 #include "filefilter.h"
 #include "osoperations.h"
+#include "treemanager.h"
 
 /**
   * Main window constructor.
@@ -22,6 +23,20 @@ MainWindow::MainWindow(QWidget *parent) :
     treemap = new TreemapWidget(this);
     ui->horizontalLayout->addWidget(treemap);
     treemap->show();
+
+	// Create tree manager thread
+	treeManager = new TreeManager(treemap->getFileTree());
+
+	// Create event chain for scan action
+	connect(actScan, SIGNAL(triggered()), this, SLOT(scanClicked()),  Qt::QueuedConnection);
+	connect(this, SIGNAL(buildTree()), treeManager, SLOT(buildTree()), Qt::QueuedConnection);
+
+	// Create event chain for scan callback
+	connect(treeManager, SIGNAL(treeUpdated()), this, SLOT(scanDone()));
+	connect(this, SIGNAL(refreshTreemap()), treemap, SLOT(fileTreeUpdated()));
+	
+	// Connect partition combo box directly with tree manager
+	connect(comboPartition, SIGNAL(currentIndexChanged(const QString &)), treeManager, SLOT(setRootPath(const QString &)), Qt::QueuedConnection);
 }
 
 /**
@@ -29,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
   */
 MainWindow::~MainWindow()
 {
+	delete treeManager;
     delete treemap;
     delete ui;
 
@@ -47,7 +63,7 @@ void MainWindow::createActions()
 {
     actScan = new QAction(tr("Scan"), this);
     actScan->setStatusTip(tr("Scans a selected partition"));
-    connect(actScan, SIGNAL(triggered()), this, SLOT(scanClicked()));
+    //connect(actScan, SIGNAL(triggered()), this, SLOT(scanClicked()));
 
     actUndo = new QAction(tr("Undo"), this);
     actUndo->setStatusTip(tr("Undoes the file operation"));
@@ -96,14 +112,17 @@ void MainWindow::fillComboPartition()
   */
 void MainWindow::scanClicked()
 {
-    FileTree &tree = treemap->getFileTree();
-    tree.buildTree( comboPartition->currentText() );
+	// TODO: Lock the UI and prepare progress bar here.
+    emit buildTree();
+}
 
-    FileFilter filter;
-    filter.setMinimumSize(1024 * 1024 * 1);
-    tree.filter(filter);
-
-    //tree.printFiles();
+/**
+ *	Called when the tree gets built.
+ */
+void MainWindow::scanDone()
+{
+	emit refreshTreemap();
+	// TODO: Hide progress bar and unlock the UI here.
 }
 
 void MainWindow::changeEvent(QEvent *e)

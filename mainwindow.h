@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "treemapwidget.h"
 #include "filetree.h"
+#include "treemanager.h"
 
 namespace Ui {
     class MainWindow;
@@ -19,6 +20,11 @@ public:
 
 public slots:
     void scanClicked();
+	void scanDone();
+
+signals:
+	void buildTree();
+	void refreshTreemap();
 
 protected:
     void changeEvent(QEvent *e);
@@ -37,6 +43,8 @@ private:
     QAction *actUndo;
     QAction *actRedo;
     QAction *actApply;
+
+	TreeManager *treeManager;
 };
 
 #endif // MAINWINDOW_H
