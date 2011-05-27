@@ -14,7 +14,7 @@
    <string>File Dragon</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout"/>
+   <layout class="QVBoxLayout" name="verticalLayout"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -37,6 +37,8 @@
     </property>
     <addaction name="actionFilters"/>
     <addaction name="actionCell_coloring"/>
+    <addaction name="separator"/>
+    <addaction name="actionShow_legend"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -81,6 +83,14 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionShow_legend">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show legend</string>
    </property>
   </action>
  </widget>

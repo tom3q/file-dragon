@@ -7,7 +7,7 @@
 
 class TreemapWidget;
 
-class CellRenderer
+class DefaultRenderer
 {
 public:
 	const static int COLOR_R = 0xDF;
@@ -21,7 +21,7 @@ public:
 		rectangle is selected or not.
 	  *	@param w A pointer to a TreemapWidget
 	  */
-	CellRenderer(TreemapWidget *w);
+	DefaultRenderer(TreemapWidget *w);
 
 	/**
 	  * Rendering method.
@@ -29,7 +29,20 @@ public:
 	  * @param rect A rectangle where a file is drawn
 	  * @param file A pointer to FileNode structure
 	  */
-	virtual void render(QPainter &painter, QRectF &rect, FileNode *file);
+	virtual void renderCell(QPainter &painter, QRectF &rect, FileNode *file);
+
+	/**
+	  * Renders a legend.
+	  * @param painter TreemapWidgets QPainter object
+	  * @param rect A rectangle where a legend is drawn
+	  */
+	virtual void renderLegend(QPainter &painter, QRectF &rect);
+
+	/**
+	  * Specifies if a renderer has a legend to draw.
+	  * @return True, if it has. False if not.
+	  */
+	virtual bool hasLegend() const;
 
 protected:
 	TreemapWidget *widget_;

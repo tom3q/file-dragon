@@ -35,6 +35,8 @@ private slots:
 	void scanDone();
 	void cancelClicked();
 
+	void on_actionShow_legend_changed();
+
 private:
     void createActions();
     void createMenus();

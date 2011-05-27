@@ -1,11 +1,11 @@
 #ifndef DATECELLRENDERER_H
 #define DATECELLRENDERER_H
 
-#include "cellrenderer.h"
+#include "defaultrenderer.h"
 
 class TreemapWidget;
 
-class DateCellRenderer : public CellRenderer
+class DateRenderer : public DefaultRenderer
 {
 public:
 	static const int NEW_R = 0xCA;
@@ -16,9 +16,14 @@ public:
 	static const int OLD_G = 0xCE;
 	static const int OLD_B = 0xC5;
 
-	DateCellRenderer(TreemapWidget *w);
+	static const int TEXT_WIDTH = 50;
+	static const int MARGIN = 5;
 
-	virtual void render(QPainter &painter, QRectF &rect, FileNode *file);
+	DateRenderer(TreemapWidget *w);
+
+	virtual void renderCell(QPainter &painter, QRectF &rect, FileNode *file);
+	virtual void renderLegend(QPainter &painter, QRectF &rect);
+	virtual bool hasLegend() const;
 
 private:
 	QDateTime now_;

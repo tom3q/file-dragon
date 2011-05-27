@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Add a TreemapWidget to a form
     treemap = new TreemapWidget(this);
-    ui->horizontalLayout->addWidget(treemap);
+	ui->verticalLayout->addWidget(treemap);
     treemap->show();
     
 	// Create a filter dialog
@@ -171,4 +171,9 @@ void MainWindow::on_actionFilters_triggered()
 void MainWindow::on_actionCell_coloring_triggered()
 {
 	coloringDialog->show();
+}
+
+void MainWindow::on_actionShow_legend_changed()
+{
+	treemap->setShowLegend(ui->actionShow_legend->isChecked());
 }
