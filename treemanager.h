@@ -15,6 +15,9 @@
 
 #include <QString>
 #include <QThread>
+#include <QDir>
+#include <QFileInfo>
+#include "directorynode.h"
 #include "filetree.h"
 
 /**
@@ -31,6 +34,7 @@ public:
 	 *	@param tree The tree to be managed.
 	 */
 	TreeManager(FileTree &tree);
+	~TreeManager();
 
 signals:
 	/**
@@ -59,6 +63,8 @@ public slots:
 	void setRootPath(const QString &path);
 
 private:
+	void scanDir(DirectoryNode *dir);
+
 	FileTree *_tree;
 };
 

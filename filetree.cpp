@@ -1,5 +1,6 @@
 #include <iostream>
 #include <QDir>
+#include <cassert>
 
 #include "filetree.h"
 #include "directorynode.h"
@@ -9,31 +10,25 @@ using namespace std;
 
 FileTree::FileTree()
 {
-    root_ = 0;
+    root_ = new DirectoryNode();
 	filter_ = new FileFilter();
 }
 
 FileTree::~FileTree()
 {
     clear();
+	delete root_;
 	delete filter_;
 }
 
-/**
-  * Constructs a directory tree, beginning with a directory specified by path.
-    Emits treeUpdated() signal.
-  * @param path Root directory for the tree.
-  */
-void FileTree::buildTree()
+DirectoryNode *FileTree::getRootNode()
 {
-    clear();
-    root_ = createDir(rootPath);
-	filterDir(root_);
+	return root_;
 }
 
 void FileTree::setRootPath(const QString &path)
 {
-	rootPath = path;
+	root_->setName(path);
 }
 
 /**
@@ -41,17 +36,8 @@ void FileTree::setRootPath(const QString &path)
   */
 void FileTree::clear()
 {
-    clear(root_);
-}
-
-void FileTree::clear(DirectoryNode *dir)
-{
-    if (root_ == 0) return;
-
-    for (unsigned int i=0; i<dir->files_.size(); i++)
-        delete dir->files_[i];
-    for (int i=0; i<dir->getDirCount(); i++)
-        clear(dir->getDir(i));
+	assert(root_ != 0);
+	root_->clear();
 }
 
 /**
@@ -66,52 +52,6 @@ void FileTree::setFilter(FileFilter &f)
 	{
 		filterDir(root_);
 	}
-}
-
-/**
-  * Creates a directory node together with all its file
-    and directory nodes. Used in "buildTree" method.
-  */
-DirectoryNode *FileTree::createDir(const QString &path)
-{
-    QDir currentDir(path);
-    double sizeSum = 0;
-
-    DirectoryNode *newNode = new DirectoryNode();
-    newNode->setName(path);
-
-    currentDir.setFilter( QDir::Files );
-    QFileInfoList entries = currentDir.entryInfoList();
-	for (int i = 0; i < entries.size(); ++i)
-    {
-		const QFileInfo &info = entries.at(i);
-
-        FileNode *fileNode = new FileNode(info);
-        sizeSum += info.size();
-
-        newNode->addFile(fileNode);
-    }
-
-    QFileInfo currentInfo;
-    currentInfo.setFile(path);
-
-    currentDir.setFilter( QDir::Dirs | QDir::NoDotAndDotDot );
-    QFileInfoList dirEntries = currentDir.entryInfoList();
-    for (int i = 0; i < dirEntries.size(); ++i)
-    {
-		const QFileInfo &info = dirEntries.at(i);
-
-        if (info == currentInfo)
-            continue;
-
-		DirectoryNode *dirNode = createDir(info.absoluteFilePath());
-        sizeSum += dirNode->getSize();
-
-        newNode->addDir(dirNode);
-    }
-
-    newNode->setSize(sizeSum);
-    return newNode;
 }
 
 /**

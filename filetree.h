@@ -16,7 +16,6 @@ public:
     FileTree();
     ~FileTree();
 
-    void buildTree();
     void clear();
 	void setFilter(FileFilter &);
     bool isEmpty() const;
@@ -25,10 +24,9 @@ public:
 
     void printFiles();
 	void setRootPath(const QString &);
+	DirectoryNode *FileTree::getRootNode();
 
 private: 
-    DirectoryNode *createDir(const QString &);
-    void clear(DirectoryNode *);
 	void filterDir(DirectoryNode *);
     void printFiles(DirectoryNode *);
 
