@@ -57,6 +57,7 @@ void DirectoryNode::clear()
         delete files_[i];
 
 	files_.clear();
+	unfilteredFiles_.clear();
 
     for (int i = 0; i < getDirCount(); ++i) {
 		DirectoryNode *d = getDir(i);
