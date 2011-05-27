@@ -7,19 +7,19 @@
   */
 
 #include "cellrenderer.h"
+#include "treemapwidget.h"
 
-CellRenderer::CellRenderer()
+CellRenderer::CellRenderer(TreemapWidget *w)
 {
+	widget_ = w;
 }
 
-/**
-  * Rendering method.
-  * @param painter TreemapWidgets QPainter object
-  * @param rect A rectangle where a file is drawn
-  * @param file A pointer to FileNode structure
-  */
-void CellRenderer::render(QPainter &painter, QRectF rect, FileNode *file)
+void CellRenderer::render(QPainter &painter, QRectF &rect, FileNode *file)
 {
-    painter.setBrush(QColor(220, 220, 200));
+	if (widget_->isSelected(file))
+		painter.setBrush(QColor(250, 250, 230));
+	else
+		painter.setBrush(QColor(220, 220, 200));
+
     painter.drawRect(rect);
 }

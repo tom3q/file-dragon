@@ -81,9 +81,9 @@ DirectoryNode *FileTree::createDir(QString path)
 
     currentDir.setFilter( QDir::Files );
     QStringList entries = currentDir.entryList();
-    for (int i=0; i<entries.size(); i++)
+	for (QStringList::iterator it = entries.begin(); it != entries.end(); ++it)
     {
-        info.setFile(path, entries.at(i));
+		info.setFile(path, *it);
 
         FileNode *fileNode = new FileNode();
         fileNode->setName(info.absoluteFilePath());
