@@ -10,6 +10,13 @@ FileNode::FileNode()
     ext_ = "";
 }
 
+FileNode::FileNode(const QFileInfo &info)
+{
+	AbstractNode::setName(info.absoluteFilePath());
+	setSize(info.size());
+	ext_ = info.completeSuffix();
+}
+
 /**
   * When file name is set, extension is also remembered.
   */
