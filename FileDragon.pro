@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     filetree.cpp \
     filefilter.cpp \
     cellrenderer.cpp \
-    osoperations.cpp
+    osoperations.cpp \
+	treemanager.cpp
 
 HEADERS  += mainwindow.h \
     treemapwidget.h \
@@ -29,6 +30,7 @@ HEADERS  += mainwindow.h \
     filetree.h \
     filefilter.h \
     cellrenderer.h \
-    osoperations.h
+    osoperations.h \
+	treemanager.h
 
 FORMS    += mainwindow.ui
