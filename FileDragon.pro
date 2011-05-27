@@ -18,11 +18,11 @@ SOURCES += main.cpp\
     filenode.cpp \
     filetree.cpp \
     filefilter.cpp \
-    cellrenderer.cpp \
+    defaultrenderer.cpp \
     osoperations.cpp \
     filterdialog.cpp \
     coloringdialog.cpp \
-    datecellrenderer.cpp \
+    daterenderer.cpp \
     treemanager.cpp
 
 HEADERS  += mainwindow.h \
@@ -32,11 +32,11 @@ HEADERS  += mainwindow.h \
     filenode.h \
     filetree.h \
     filefilter.h \
-    cellrenderer.h \
+    defaultrenderer.h \
     osoperations.h \
     filterdialog.h \
     coloringdialog.h \
-    datecellrenderer.h \
+    daterenderer.h \
     filterdialog.h \
     treemanager.h
 
