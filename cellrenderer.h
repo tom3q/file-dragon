@@ -10,6 +10,11 @@ class TreemapWidget;
 class CellRenderer
 {
 public:
+	const static int COLOR_R = 0xDF;
+	const static int COLOR_G = 0xDF;
+	const static int COLOR_B = 0xDF;
+	const static int HIGHLIGHT = 20;
+
 	/**
 	  * Object constructor. Gets a pointer to TreemapWidget so
 		that the rendering method could determine if a file
@@ -26,7 +31,7 @@ public:
 	  */
 	virtual void render(QPainter &painter, QRectF &rect, FileNode *file);
 
-private:
+protected:
 	TreemapWidget *widget_;
 };
 

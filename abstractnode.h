@@ -11,16 +11,16 @@ public:
     void setParent(AbstractNode *);
     AbstractNode *getParent() const;
 
-    void setName(QString);
+    void setName(const QString &);
     QString getName() const;
 
-    void setSize(double);
-    double getSize() const;
+    void setSize(qint64);
+    qint64 getSize() const;
 
 private:
     AbstractNode *parent_;
     QString name_;
-    double size_;
+    qint64 size_;
 };
 
 #endif // ABSTRACTNODE_H

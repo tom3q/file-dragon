@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     osoperations.cpp \
     filterdialog.cpp \
     coloringdialog.cpp \
-    datecellrenderer.cpp
+    datecellrenderer.cpp \
+    treemanager.cpp
 
 HEADERS  += mainwindow.h \
     treemapwidget.h \
@@ -35,7 +36,9 @@ HEADERS  += mainwindow.h \
     osoperations.h \
     filterdialog.h \
     coloringdialog.h \
-    datecellrenderer.h
+    datecellrenderer.h \
+    filterdialog.h \
+    treemanager.h
 
 FORMS    += mainwindow.ui \
     filterdialog.ui \

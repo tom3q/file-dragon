@@ -16,7 +16,7 @@ public:
     FileTree();
     ~FileTree();
 
-    void buildTree(QString);
+    void buildTree();
     void clear();
 	void setFilter(FileFilter &);
     bool isEmpty() const;
@@ -24,17 +24,16 @@ public:
     DirectoryNode *getRoot() const;
 
     void printFiles();
-
-signals:
-    void treeUpdated();
+	void setRootPath(const QString &);
 
 private: 
-    DirectoryNode *createDir(QString);
+    DirectoryNode *createDir(const QString &);
     void clear(DirectoryNode *);
 	void filterDir(DirectoryNode *);
     void printFiles(DirectoryNode *);
 
     DirectoryNode *root_;
+	QString rootPath;
 	FileFilter *filter_;
 };
 

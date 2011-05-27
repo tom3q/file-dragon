@@ -15,7 +15,6 @@ TreemapWidget::TreemapWidget(QWidget *parent) :
 
     // create file tree and connect signals-slots
     tree_ = new FileTree();
-    connect(tree_, SIGNAL(treeUpdated()), this, SLOT(fileTreeUpdated()));
 
     // create a cell renderer
 	renderer_ = new CellRenderer(this);
@@ -82,16 +81,23 @@ void TreemapWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
 
-    // ramka
-    QSize size = event->rect().size();
-	painter.setBrush(QColor(244, 241, 217));
-    painter.drawRect(0, 0, size.width()-1, size.height()-1);
+	// czarne wypełnienie
+	QSize size = event->rect().size();
+	painter.setBrush(QColor(0, 0, 0));
+	painter.drawRect(0, 0, size.width()-1, size.height()-1);
 
+	// draw tree
     if (!tree_->isEmpty())
-    {
-        QRectF rect(0, 0, size.width()-1, size.height()-1);
-        drawDirVert(painter, rect, tree_->getRoot());
+	{
+		QRectF rect(0, 0, size.width()-1, size.height()-1);
+		drawDirVert(painter, rect, tree_->getRoot());
     }
+	// draw nice filling
+	else
+	{
+		painter.setBrush(QColor(0xDF, 0xDF, 0xDF));
+		painter.drawRect(0, 0, size.width()-1, size.height()-1);
+	}
 }
 
 void TreemapWidget::fileTreeUpdated()
