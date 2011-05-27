@@ -7,7 +7,7 @@
 #include <set>
 
 #include "filetree.h"
-#include "cellrenderer.h"
+#include "defaultrenderer.h"
 
 using namespace std;
 
@@ -15,6 +15,9 @@ class TreemapWidget : public QWidget
 {
     Q_OBJECT
 public:
+	const static int LEGEND_HEIGHT = 30;
+	const static int LEGEND_MARGIN = 10;
+
 	/**
 	  * Widget constructor.
 	  */
@@ -26,11 +29,12 @@ public:
     ~TreemapWidget();
 
 	/**
-	  * Sets a cell renderer for a TreemapWidget. CellRenderer renders
-		each cell during paint event using its render() method.
+	  * Sets a renderer for a TreemapWidget. DefaultRenderer renders
+		each cell during paint event using its render() method and
+		file legend if such option is used.
 		@param cr Pointer to a CellRenderer object.
 	  */
-	void setCellRenderer(CellRenderer *cr);
+	void setRenderer(DefaultRenderer *cr);
 
 	/**
 	  * Returns a reference to its FileTree object.
@@ -59,6 +63,8 @@ public:
 	  */
 	bool isSelected(FileNode *node) const;
 
+	void setShowLegend(bool show);
+
 public slots:
 	/**
 	  * This slot is called when FileTree changes its contents.
@@ -85,8 +91,9 @@ private:
 	FileNode *detectFile(int, int);
 
     FileTree *tree_;
-    CellRenderer *renderer_;
+	DefaultRenderer *renderer_;
 	set<FileNode*> selectedNodes_;
+	bool showLegend_;
 };
 
 #endif // TREEMAPWIDGET_H
