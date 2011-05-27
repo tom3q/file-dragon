@@ -187,7 +187,7 @@ FileNode *TreemapWidget::detectFile(int x, int y)
 	double dirSize, wi, he;
 	int vert = 1;
 
-	if (dir == 0) return 0;
+	if (getFileTree().isEmpty()) return 0;
 
 	// if legend is shown, drawing is moved down and detection rectangle
 	// also should be moved down

@@ -11,7 +11,7 @@ class FileFilter;
 class FileTree : public QObject
 {
     Q_OBJECT
-
+//
 public:
     FileTree();
     ~FileTree();
