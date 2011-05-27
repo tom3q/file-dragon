@@ -21,11 +21,6 @@ FileTree::~FileTree()
 	delete filter_;
 }
 
-DirectoryNode *FileTree::getRootNode()
-{
-	return root_;
-}
-
 void FileTree::setRootPath(const QString &path)
 {
 	root_->setName(path);
@@ -92,7 +87,7 @@ void FileTree::filterDir(DirectoryNode *currentDir)
 
 bool FileTree::isEmpty() const
 {
-    return root_ == 0;
+	return root_->files_.empty() && root_->dirs_.empty();
 }
 
 DirectoryNode *FileTree::getRoot() const

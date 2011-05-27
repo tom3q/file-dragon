@@ -24,7 +24,6 @@ public:
 
     void printFiles();
 	void setRootPath(const QString &);
-	DirectoryNode *FileTree::getRootNode();
 
 private: 
 	void filterDir(DirectoryNode *);

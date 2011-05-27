@@ -39,7 +39,7 @@ void TreeManager::clear()
 void TreeManager::buildTree()
 {
 	_tree->clear();
-	scanDir(_tree->getRootNode());
+	scanDir(_tree->getRoot());
 	emit treeUpdated();
 }
 
