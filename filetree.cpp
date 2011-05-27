@@ -41,17 +41,17 @@ void FileTree::setRootPath(const QString &path)
   */
 void FileTree::clear()
 {
+	if (root_ == 0) return;
     clear(root_);
 }
 
 void FileTree::clear(DirectoryNode *dir)
 {
-    if (root_ == 0) return;
-
     for (unsigned int i=0; i<dir->files_.size(); i++)
         delete dir->files_[i];
     for (int i=0; i<dir->getDirCount(); i++)
         clear(dir->getDir(i));
+	delete dir;
 }
 
 /**
