@@ -87,6 +87,7 @@ void MainWindow::createActions()
 
 	actCancel = new QAction(tr("Cancel"), this);
 	actCancel->setStatusTip(tr("Cancels pending operation"));
+	actCancel->setEnabled(false);
 }
 
 /**
@@ -96,13 +97,12 @@ void MainWindow::createMenus()
 {
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction(actScan);
+	ui->mainToolBar->addAction(actCancel);
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction(actUndo);
     ui->mainToolBar->addAction(actRedo);
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction(actApply);
-	ui->mainToolBar->addSeparator();
-	ui->mainToolBar->addAction(actCancel);
 
     stretchWidget = new QLabel(this);
     stretchWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -129,6 +129,7 @@ void MainWindow::fillComboPartition()
 void MainWindow::scanClicked()
 {
 	actScan->setEnabled(false);
+	actCancel->setEnabled(true);
 	comboPartition->setEnabled(false);
 	treemap->hide();
 	// TODO: Prepare progress bar here.
@@ -145,6 +146,7 @@ void MainWindow::scanDone()
 	treemap->show();
 	comboPartition->setEnabled(true);
 	actScan->setEnabled(true);
+	actCancel->setEnabled(false);
 }
 
 void MainWindow::cancelClicked()

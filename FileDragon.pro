@@ -9,7 +9,6 @@ QT       += core gui
 TARGET = FileDragon
 TEMPLATE = app
 
-
 SOURCES += main.cpp\
         mainwindow.cpp \
     treemapwidget.cpp \
@@ -43,3 +42,5 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     filterdialog.ui \
     coloringdialog.ui
+
+QMAKE_CXXFLAGS += -g
