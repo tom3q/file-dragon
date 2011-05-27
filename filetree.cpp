@@ -65,7 +65,6 @@ void FileTree::setFilter(FileFilter &f)
 	if (root_ != 0)
 	{
 		filterDir(root_);
-		emit treeUpdated();
 	}
 }
 
