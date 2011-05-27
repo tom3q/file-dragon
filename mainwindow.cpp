@@ -17,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // Add menus and other shit...
     createActions();
     createMenus();
-    fillComboPartition();
 
     // Add a TreemapWidget to a form
     treemap = new TreemapWidget(this);
@@ -45,6 +44,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Connect cancel action to its handler
 	connect(actCancel, SIGNAL(triggered()), this, SLOT(cancelClicked()), Qt::QueuedConnection);
+
+	// Fill partition list (also sends currentIndexChanges signal to treeManager)
+	fillComboPartition();
 }
 
 /**
@@ -73,7 +75,6 @@ void MainWindow::createActions()
 {
     actScan = new QAction(tr("Scan"), this);
     actScan->setStatusTip(tr("Scans a selected partition"));
-    //connect(actScan, SIGNAL(triggered()), this, SLOT(scanClicked()));
 
     actUndo = new QAction(tr("Undo"), this);
     actUndo->setStatusTip(tr("Undoes the file operation"));
