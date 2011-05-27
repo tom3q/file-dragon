@@ -9,7 +9,7 @@ class FileNode : public AbstractNode
 public:
     FileNode();
 
-    void setName(QString);
+    void setName(const QString &);
     QString getExtension() const;
 
 private:

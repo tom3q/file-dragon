@@ -13,7 +13,7 @@ FileNode::FileNode()
 /**
   * When file name is set, extension is also remembered.
   */
-void FileNode::setName(QString name)
+void FileNode::setName(const QString &name)
 {
     AbstractNode::setName(name);
     QFileInfo info(name);

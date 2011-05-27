@@ -22,7 +22,7 @@ AbstractNode *AbstractNode::getParent() const
     return parent_;
 }
 
-void AbstractNode::setName(QString name)
+void AbstractNode::setName(const QString &name)
 {
     name_ = name;
 }
@@ -32,12 +32,12 @@ QString AbstractNode::getName() const
     return name_;
 }
 
-void AbstractNode::setSize(double size)
+void AbstractNode::setSize(qint64 size)
 {
     size_ = size;
 }
 
-double AbstractNode::getSize() const
+qint64 AbstractNode::getSize() const
 {
     return size_;
 }
