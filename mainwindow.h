@@ -21,10 +21,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-public slots:
-    void scanClicked();
-	void scanDone();
-
 signals:
 	void buildTree();
 	void refreshTreemap();
@@ -34,8 +30,10 @@ protected:
 
 private slots:
 	void on_actionFilters_triggered();
-
 	void on_actionCell_coloring_triggered();
+    void scanClicked();
+	void scanDone();
+	void cancelClicked();
 
 private:
     void createActions();
@@ -53,6 +51,7 @@ private:
     QAction *actUndo;
     QAction *actRedo;
     QAction *actApply;
+	QAction *actCancel;
 
 	TreeManager *treeManager;
 };

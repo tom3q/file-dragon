@@ -42,6 +42,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	// Connect partition combo box directly with tree manager
 	connect(comboPartition, SIGNAL(currentIndexChanged(const QString &)), treeManager, SLOT(setRootPath(const QString &)), Qt::QueuedConnection);
+
+	// Connect cancel action to its handler
+	connect(actCancel, SIGNAL(triggered()), this, SLOT(cancelClicked()), Qt::QueuedConnection);
 }
 
 /**
@@ -58,6 +61,7 @@ MainWindow::~MainWindow()
     delete actUndo;
     delete actRedo;
     delete actApply;
+	delete actCancel;
     delete comboPartition;
     delete stretchWidget;
 }
@@ -79,6 +83,9 @@ void MainWindow::createActions()
 
     actApply = new QAction(tr("Apply"), this);
     actApply->setStatusTip(tr("Executes all file operations"));
+
+	actCancel = new QAction(tr("Cancel"), this);
+	actCancel->setStatusTip(tr("Cancels pending operation"));
 }
 
 /**
@@ -93,6 +100,8 @@ void MainWindow::createMenus()
     ui->mainToolBar->addAction(actRedo);
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction(actApply);
+	ui->mainToolBar->addSeparator();
+	ui->mainToolBar->addAction(actCancel);
 
     stretchWidget = new QLabel(this);
     stretchWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -135,6 +144,11 @@ void MainWindow::scanDone()
 	treemap->show();
 	comboPartition->setEnabled(true);
 	actScan->setEnabled(true);
+}
+
+void MainWindow::cancelClicked()
+{
+	treeManager->cancel();
 }
 
 void MainWindow::changeEvent(QEvent *e)

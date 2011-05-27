@@ -34,7 +34,14 @@ public:
 	 *	@param tree The tree to be managed.
 	 */
 	TreeManager(FileTree &tree);
+	/**
+	 *	Object desctructor.
+	 */
 	~TreeManager();
+	/**
+	 *	Cancels pending operation.
+	 */
+	void cancel();
 
 signals:
 	/**
@@ -66,6 +73,7 @@ private:
 	void scanDir(DirectoryNode *dir);
 
 	FileTree *_tree;
+	bool shouldCancel;
 };
 
 #endif
