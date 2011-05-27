@@ -29,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Create coloring dialog
 	coloringDialog = new ColoringDialog(this, treemap);
-    
 	// Create tree manager thread
 	treeManager = new TreeManager(treemap->getFileTree());
 
@@ -119,7 +118,10 @@ void MainWindow::fillComboPartition()
   */
 void MainWindow::scanClicked()
 {
-	// TODO: Lock the UI and prepare progress bar here.
+	actScan->setEnabled(false);
+	comboPartition->setEnabled(false);
+	treemap->hide();
+	// TODO: Prepare progress bar here.
     emit buildTree();
 }
 
@@ -129,7 +131,10 @@ void MainWindow::scanClicked()
 void MainWindow::scanDone()
 {
 	emit refreshTreemap();
-	// TODO: Hide progress bar and unlock the UI here.
+	// TODO: Hide progress bar here.
+	treemap->show();
+	comboPartition->setEnabled(true);
+	actScan->setEnabled(true);
 }
 
 void MainWindow::changeEvent(QEvent *e)
