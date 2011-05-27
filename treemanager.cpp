@@ -21,12 +21,14 @@ TreeManager::TreeManager(FileTree &tree)
 
 TreeManager::~TreeManager()
 {
+	cancel();
 	this->quit();
 	this->wait();
 }
 
 void TreeManager::clear()
 {
+	shouldCancel = false;
 	_tree->clear();
 	emit treeUpdated();
 }
@@ -38,8 +40,11 @@ void TreeManager::clear()
   */
 void TreeManager::buildTree()
 {
+	shouldCancel = false;
 	_tree->clear();
 	scanDir(_tree->getRoot());
+	if (shouldCancel)
+		_tree->clear();
 	emit treeUpdated();
 }
 
@@ -63,6 +68,9 @@ void TreeManager::scanDir(DirectoryNode *dir)
         sizeSum += info.size();
 
         dir->addFile(fileNode);
+
+		if (shouldCancel)
+			return;
     }
 
     QFileInfo currentInfo;
@@ -80,6 +88,9 @@ void TreeManager::scanDir(DirectoryNode *dir)
 		DirectoryNode *dirNode = dir->addDir(info.absoluteFilePath());
 		scanDir(dirNode);
         sizeSum += dirNode->getSize();
+
+		if (shouldCancel)
+			return;
     }
 
     dir->setSize(sizeSum);
@@ -87,5 +98,11 @@ void TreeManager::scanDir(DirectoryNode *dir)
 
 void TreeManager::setRootPath(const QString &path)
 {
+	shouldCancel = false;
 	_tree->setRootPath(path);
+}
+
+void TreeManager::cancel()
+{
+	shouldCancel = true;
 }
