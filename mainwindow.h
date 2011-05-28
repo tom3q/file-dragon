@@ -5,9 +5,11 @@
 
 #include "filterdialog.h"
 #include "coloringdialog.h"
+#include "fileinfodialog.h"
 #include "treemapwidget.h"
 #include "filetree.h"
 #include "treemanager.h"
+#include "fileframe.h"
 
 namespace Ui {
     class MainWindow;
@@ -34,8 +36,9 @@ private slots:
     void scanClicked();
 	void scanDone();
 	void cancelClicked();
-
+	void fileClicked(FileNode *);
 	void on_actionShow_legend_changed();
+	void on_actionFile_information_triggered();
 
 private:
     void createActions();
@@ -45,7 +48,7 @@ private:
 	Ui::MainWindow *ui;
 	FilterDialog *filterDialog;
 	ColoringDialog *coloringDialog;
-    FileTree *tree;
+	FileInfoDialog *fileinfoDialog;
     TreemapWidget *treemap;
     QComboBox *comboPartition;
     QLabel *stretchWidget;
@@ -55,8 +58,10 @@ private:
     QAction *actApply;
 	QAction *actCancel;
 	QProgressBar *scanProgress;
+	FileFrame *fileFrame;
 
 	TreeManager *treeManager;
+	FileTree *tree;
 };
 
 #endif // MAINWINDOW_H
