@@ -73,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	progressAnimLabel = new QLabel();
 	progressAnimLabel->setMovie(progressAnim);
 	progressAnimLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+	progressAnim->setCacheMode(QMovie::CacheAll);
 
 	// Progress bar layout and widget
 	progressBarLayout = new QVBoxLayout();
