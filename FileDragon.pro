@@ -47,5 +47,3 @@ FORMS    += mainwindow.ui \
     filterdialog.ui \
     coloringdialog.ui \
     fileinfodialog.ui
-
-QMAKE_CXXFLAGS += -g
