@@ -64,7 +64,16 @@ MainWindow::MainWindow(QWidget *parent) :
 	scanProgress->setRange(0, 100);
 	connect(treeManager, SIGNAL(progressUpdated(int)), scanProgress, SLOT(setValue(int)), Qt::QueuedConnection);
 
+	// Connect back action to treemap widget
 	connect(actBack, SIGNAL(triggered()), treemap, SLOT(back()));
+
+	// Create a label on status bar to show current path
+	rootPathLabel = new QLabel(ui->statusBar);
+	rootPathLabel->setText(tr("Select a disk to scan and click Scan button."));
+	ui->statusBar->addWidget(rootPathLabel);
+
+	// Connect treemap to the label to signal path changes
+	connect(treemap, SIGNAL(rootChanged(const QString &)), rootPathLabel, SLOT(setText(const QString &)));
 }
 
 /**
@@ -90,6 +99,7 @@ MainWindow::~MainWindow()
     delete comboPartition;
     delete stretchWidget;
 	delete scanProgress;
+	delete rootPathLabel;
 }
 
 /**
