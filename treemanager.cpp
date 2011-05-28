@@ -11,6 +11,8 @@
  */
 
 #include "treemanager.h"
+#include "osoperations.h"
+#include <cassert>
 
 TreeManager::TreeManager(FileTree &tree)
 	: _tree(&tree)
@@ -42,6 +44,10 @@ void TreeManager::buildTree()
 {
 	shouldCancel = false;
 	_tree->clear();
+	DirectoryNode *root = _tree->getRoot();
+	totalUsed = OSOperations::getUsedSpace(root->getName());
+	assert(totalUsed != 0);
+	totalProcessed = 0;
 	scanDir(_tree->getRoot());
 	if (shouldCancel)
 		_tree->clear();
@@ -66,6 +72,9 @@ void TreeManager::scanDir(DirectoryNode *dir)
 
         FileNode *fileNode = new FileNode(info);
         sizeSum += info.size();
+
+		totalProcessed += info.size();
+		emit progressUpdated((100 * totalProcessed) / totalUsed);
 
         dir->addFile(fileNode);
 

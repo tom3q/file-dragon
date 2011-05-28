@@ -47,6 +47,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Fill partition list (also sends currentIndexChanges signal to treeManager)
 	fillComboPartition();
+
+	scanProgress = new QProgressBar(this);
+	scanProgress->hide();
+	scanProgress->setRange(0, 100);
+	connect(treeManager, SIGNAL(progressUpdated(int)), scanProgress, SLOT(setValue(int)), Qt::QueuedConnection);
 }
 
 /**
@@ -66,6 +71,7 @@ MainWindow::~MainWindow()
 	delete actCancel;
     delete comboPartition;
     delete stretchWidget;
+	delete scanProgress;
 }
 
 /**
@@ -132,6 +138,9 @@ void MainWindow::scanClicked()
 	actCancel->setEnabled(true);
 	comboPartition->setEnabled(false);
 	treemap->hide();
+	ui->verticalLayout->removeWidget(treemap);
+	ui->verticalLayout->addWidget(scanProgress);
+	scanProgress->show();
 	// TODO: Prepare progress bar here.
     emit buildTree();
 }
@@ -143,6 +152,9 @@ void MainWindow::scanDone()
 {
 	emit refreshTreemap();
 	// TODO: Hide progress bar here.
+	scanProgress->hide();
+	ui->verticalLayout->removeWidget(scanProgress);
+	ui->verticalLayout->addWidget(treemap);
 	treemap->show();
 	comboPartition->setEnabled(true);
 	actScan->setEnabled(true);

@@ -9,6 +9,7 @@ public:
     OSOperations();
 
     static QStringList diskList();
+	static qint64 getUsedSpace(const QString &);
 };
 
 #endif // OSOPERATIONS_H
