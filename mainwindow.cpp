@@ -63,6 +63,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	scanProgress->hide();
 	scanProgress->setRange(0, 100);
 	connect(treeManager, SIGNAL(progressUpdated(int)), scanProgress, SLOT(setValue(int)), Qt::QueuedConnection);
+
+	connect(actBack, SIGNAL(triggered()), treemap, SLOT(back()));
 }
 
 /**
@@ -84,6 +86,7 @@ MainWindow::~MainWindow()
     delete actRedo;
     delete actApply;
 	delete actCancel;
+	delete actBack;
     delete comboPartition;
     delete stretchWidget;
 	delete scanProgress;
@@ -109,6 +112,9 @@ void MainWindow::createActions()
 	actCancel = new QAction(tr("Cancel"), this);
 	actCancel->setStatusTip(tr("Cancels pending operation"));
 	actCancel->setEnabled(false);
+
+	actBack = new QAction(tr("Back"), this);
+	actBack->setStatusTip(tr("Returns to the parent directory"));
 }
 
 /**
@@ -124,6 +130,8 @@ void MainWindow::createMenus()
     ui->mainToolBar->addAction(actRedo);
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction(actApply);
+	ui->mainToolBar->addSeparator();
+	ui->mainToolBar->addAction(actBack);
 
     stretchWidget = new QLabel(this);
     stretchWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);

@@ -57,6 +57,7 @@ private:
     QAction *actRedo;
     QAction *actApply;
 	QAction *actCancel;
+	QAction *actBack;
 	QProgressBar *scanProgress;
 	FileFrame *fileFrame;
 

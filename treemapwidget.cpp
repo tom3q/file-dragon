@@ -16,6 +16,7 @@ TreemapWidget::TreemapWidget(QWidget *parent) :
 
     // create file tree and connect signals-slots
     tree_ = new FileTree();
+	currentRoot_ = tree_->getRoot();
 
     // create a cell renderer
 	renderer_ = new DefaultRenderer(this);
@@ -93,6 +94,21 @@ void TreemapWidget::mousePressEvent(QMouseEvent *event)
 	}
 }
 
+void TreemapWidget::mouseDoubleClickEvent(QMouseEvent *event)
+{
+	if (event->button() == Qt::LeftButton)
+	{
+		DirectoryNode *dir = detectDirectory(event->x(), event->y());
+
+		if (dir != 0)
+		{
+			startVert ^= 1;
+			currentRoot_ = dir;
+			repaint();
+		}
+	}
+}
+
 void TreemapWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
@@ -116,9 +132,13 @@ void TreemapWidget::paintEvent(QPaintEvent *event)
 	painter.drawRect(rectangle);
 
 	// draw tree
-    if (!tree_->isEmpty())
-		drawDirVert(painter, rectangle, tree_->getRoot());
+    if (!currentRoot_->empty()) {
+		if (startVert)
+			drawDirVert(painter, rectangle, currentRoot_);
+		else
+			drawDirHorz(painter, rectangle, currentRoot_);
 	// draw simple filling
+	}
 	else
 	{
 		painter.setBrush(QColor(0xDF, 0xDF, 0xDF));
@@ -128,8 +148,19 @@ void TreemapWidget::paintEvent(QPaintEvent *event)
 
 void TreemapWidget::fileTreeUpdated()
 {
+	startVert = true;
+	currentRoot_ = tree_->getRoot();
 	selectedNodes_.clear();
     update();
+}
+
+void TreemapWidget::back()
+{
+	if (currentRoot_->getParent()) {
+		currentRoot_ = (DirectoryNode*)currentRoot_->getParent();
+		startVert ^= 1;
+	}
+	update();
 }
 
 void TreemapWidget::drawDirVert(QPainter &painter, QRectF &rect, DirectoryNode *dir)
@@ -188,14 +219,96 @@ void TreemapWidget::drawDirHorz(QPainter &painter, QRectF &rect, DirectoryNode *
     }
 }
 
-FileNode *TreemapWidget::detectFile(int x, int y)
+DirectoryNode *TreemapWidget::detectDirectory(int x, int y)
 {
-	DirectoryNode *dir = getFileTree().getRoot();
+	DirectoryNode *dir = currentRoot_;
 	QRectF dirRect = rect(), currRect;
 	double dirSize, wi, he;
-	int vert = 1;
+	int vert = startVert;
 
-	if (getFileTree().isEmpty()) return 0;
+	if (currentRoot_->empty()) return 0;
+
+	// if legend is shown, drawing is moved down and detection rectangle
+	// also should be moved down
+	if (showLegend_ && renderer_->hasLegend())
+	{
+		dirRect.setY(LEGEND_HEIGHT+LEGEND_MARGIN);
+
+		// if users clicked legend, no detection should take place
+		if (y <= LEGEND_HEIGHT+LEGEND_MARGIN)
+			return 0;
+	}
+
+	dirSize = dir->getSize();
+
+	if (vert % 2)
+	{
+		currRect.setX(dirRect.x());
+		currRect.setY(dirRect.y());
+		currRect.setHeight(dirRect.height());
+
+		for (int i = 0; i < dir->getFileCount(); i++)
+		{
+			wi = (double) dirRect.width() * dir->getFile(i)->getSize() / dirSize;
+			currRect.setWidth(wi);
+
+			if (currRect.contains(x, y))
+				return 0;
+
+			currRect.setX(currRect.x() + currRect.width());
+		}
+
+		for (int i = 0; i < dir->getDirCount(); i++)
+		{
+			wi = (double) dirRect.width() * dir->getDir(i)->getSize() / dirSize;
+			currRect.setWidth(wi);
+
+			if (currRect.contains(x, y))
+				return dir->getDir(i);
+
+			currRect.setX(currRect.x() + currRect.width());
+		}
+	}
+	else
+	{
+		currRect.setX(dirRect.x());
+		currRect.setY(dirRect.y());
+		currRect.setWidth(dirRect.width());
+
+		for (int i = 0; i < dir->getFileCount(); i++)
+		{
+			he = (double) dirRect.height() * dir->getFile(i)->getSize() / dirSize;
+			currRect.setHeight(he);
+
+			if (currRect.contains(x, y))
+				return 0;
+
+			currRect.setY(currRect.y() + currRect.height());
+		}
+
+		for (int i = 0; i < dir->getDirCount(); i++)
+		{
+			he = (double) dirRect.height() * dir->getDir(i)->getSize() / dirSize;
+			currRect.setHeight(he);
+
+			if (currRect.contains(x, y))
+				return dir->getDir(i);
+
+			currRect.setY(currRect.y() + currRect.height());
+		}
+	}
+
+	return 0;
+}
+
+FileNode *TreemapWidget::detectFile(int x, int y)
+{
+	DirectoryNode *dir = currentRoot_;
+	QRectF dirRect = rect(), currRect;
+	double dirSize, wi, he;
+	int vert = startVert;
+
+	if (currentRoot_->empty()) return 0;
 
 	// if legend is shown, drawing is moved down and detection rectangle
 	// also should be moved down

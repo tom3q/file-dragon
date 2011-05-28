@@ -22,6 +22,7 @@ public:
     void addFile(FileNode *);
     FileNode *getFile(int) const;
     int getFileCount() const;
+	bool empty() const;
 
 private:
     friend class FileTree;

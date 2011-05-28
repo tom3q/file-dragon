@@ -91,7 +91,7 @@ void FileTree::filterDir(DirectoryNode *currentDir)
 
 bool FileTree::isEmpty() const
 {
-	return root_->files_.empty() && root_->dirs_.empty();
+	return root_->empty();
 }
 
 DirectoryNode *FileTree::getRoot() const

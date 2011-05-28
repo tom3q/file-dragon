@@ -73,6 +73,7 @@ public slots:
 		Clears selection and redraws the widget.
 	  */
     void fileTreeUpdated();
+	void back();
 
 signals:
 
@@ -90,16 +91,20 @@ protected:
 		to select more than one file.
 	  */
 	void mousePressEvent(QMouseEvent *event);
+	void mouseDoubleClickEvent(QMouseEvent *event);
 
 private:
     void drawDirVert(QPainter &painter, QRectF &rect, DirectoryNode *dir);
     void drawDirHorz(QPainter &painter, QRectF &rect, DirectoryNode *dir);
 	FileNode *detectFile(int, int);
+	DirectoryNode *detectDirectory(int, int);
 
     FileTree *tree_;
+	DirectoryNode *currentRoot_;
 	DefaultRenderer *renderer_;
 	set<FileNode*> selectedNodes_;
 	bool showLegend_;
+	bool startVert;
 };
 
 #endif // TREEMAPWIDGET_H
