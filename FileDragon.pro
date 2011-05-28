@@ -47,3 +47,5 @@ FORMS    += mainwindow.ui \
     filterdialog.ui \
     coloringdialog.ui \
     fileinfodialog.ui
+
+RESOURCES	+= FileDragon.qrc

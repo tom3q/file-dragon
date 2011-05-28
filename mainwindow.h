@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMovie>
 
 #include "filterdialog.h"
 #include "coloringdialog.h"
@@ -61,6 +62,11 @@ private:
 	QProgressBar *scanProgress;
 	FileFrame *fileFrame;
 	QLabel *rootPathLabel;
+	QLabel *nowScanningLabel;
+	QVBoxLayout *progressBarLayout;
+	QWidget *progressBar;
+	QMovie *progressAnim;
+	QLabel *progressAnimLabel;
 
 	TreeManager *treeManager;
 	FileTree *tree;
