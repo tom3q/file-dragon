@@ -1,3 +1,4 @@
+#include <cstdio>
 #include "fileframe.h"
 
 FileFrame::FileFrame(QWidget *parent) :
@@ -34,16 +35,37 @@ void FileFrame::updateInfo(FileNode *file)
 	if (file == 0)
 	{
 		lblName_->setText(tr("File name:"));
-		lblSize_->setText(tr("File size (KB):"));
+		lblSize_->setText(tr("File size:"));
 		lblModDate_->setText(tr("Modification date: "));
 	}
 	else
 	{
-		QString size = QString::number(file->getSize() / 1024);
+		// file date
 		QString date = file->getModified().toString("dd/MM/yyyy hh:mm:ss");
 
+		// file size
+		QString size;
+		char buffer[64];
+		if (file->getSize() > 1024*1024*1024)
+		{
+			sprintf(buffer, "%.2lf", (double) file->getSize()/(1024*1024*1024));
+			size = QString(buffer) + " GB";
+		}
+		else if (file->getSize() > 1024*1024)
+		{
+			sprintf(buffer, "%.2lf", (double) file->getSize()/(1024*1024));
+			size = QString(buffer) + " MB";
+		}
+		else if (file->getSize() > 1024)
+		{
+			sprintf(buffer, "%.2lf", (double) file->getSize()/(1024));
+			size = QString(buffer) + " KB";
+		}
+		else
+			size = QString::number(file->getSize()) + " B";
+
 		lblName_->setText(tr("File name: ")+file->getName());
-		lblSize_->setText(tr("File size (KB): ")+size);
+		lblSize_->setText(tr("File size: ")+size);
 		lblModDate_->setText(tr("Modification date: ")+date);
 	}
 }

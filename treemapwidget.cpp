@@ -82,11 +82,18 @@ void TreemapWidget::mousePressEvent(QMouseEvent *event)
 
 		if (file != 0)
 		{
-			// if Control key is not pressed, clear the selection.
-			// if it is pressed, the selection will remain
-			if (!(QApplication::keyboardModifiers() & Qt::ControlModifier))
+			if (QApplication::keyboardModifiers() & Qt::ControlModifier)
+			{
+				if (!isSelected(file))
+					selectedNodes_.insert(file);
+				else
+					selectedNodes_.erase(file);
+			}
+			else
+			{
 				selectedNodes_.clear();
-			selectedNodes_.insert(file);
+				selectedNodes_.insert(file);
+			}
 			repaint();
 
 			emit fileSelected(file);
@@ -157,7 +164,7 @@ void TreemapWidget::fileTreeUpdated()
 void TreemapWidget::back()
 {
 	if (currentRoot_->getParent()) {
-		currentRoot_ = (DirectoryNode*)currentRoot_->getParent();
+		currentRoot_ = (DirectoryNode*) currentRoot_->getParent();
 		startVert ^= 1;
 	}
 	update();
