@@ -50,13 +50,16 @@ void TreeManager::buildTree()
 	totalProcessed = 0;
 
 	emit progressUpdated(0);
-	scanDir(_tree->getRoot());
+	emit nowScanning(root->getName());
+
+	scanDir(root);
+
 	if (shouldCancel)
 		_tree->clear();
-	else
-		emit progressUpdated(100);
+
 	_tree->filter();
 
+	emit progressUpdated(100);
 	emit treeUpdated();
 }
 
@@ -101,6 +104,7 @@ void TreeManager::scanDir(DirectoryNode *dir)
             continue;
 
 		DirectoryNode *dirNode = dir->addDir(info.absoluteFilePath());
+		emit nowScanning(info.absoluteFilePath());
 		scanDir(dirNode);
         sizeSum += dirNode->getSize();
 

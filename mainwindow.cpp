@@ -59,10 +59,29 @@ MainWindow::MainWindow(QWidget *parent) :
 	fillComboPartition();
 
 	// Progressbar
-	scanProgress = new QProgressBar(this);
-	scanProgress->hide();
+	scanProgress = new QProgressBar();
 	scanProgress->setRange(0, 100);
 	connect(treeManager, SIGNAL(progressUpdated(int)), scanProgress, SLOT(setValue(int)), Qt::QueuedConnection);
+
+	// Create a label for displaying currently scanned directory
+	nowScanningLabel = new QLabel();
+	nowScanningLabel->setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed));
+	connect(treeManager, SIGNAL(nowScanning(const QString &)), nowScanningLabel, SLOT(setText(const QString &)));
+
+	// Progress animation
+	progressAnim = new QMovie(":/loading-gif-animation.gif");
+	progressAnimLabel = new QLabel();
+	progressAnimLabel->setMovie(progressAnim);
+	progressAnimLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+	// Progress bar layout and widget
+	progressBarLayout = new QVBoxLayout();
+	progressBarLayout->addWidget(progressAnimLabel);
+	progressBarLayout->addWidget(nowScanningLabel);
+	progressBarLayout->addWidget(scanProgress);
+	progressBar = new QWidget();
+	progressBar->setLayout(progressBarLayout);
+	progressBar->hide();
 
 	// Connect back action to treemap widget
 	connect(actBack, SIGNAL(triggered()), treemap, SLOT(back()));
@@ -87,6 +106,9 @@ MainWindow::~MainWindow()
 	delete filterDialog;
 	delete fileinfoDialog;
 	delete coloringDialog;
+	
+	delete progressBar;
+	delete progressAnim;
 
 	delete treemap;
 	delete fileFrame;
@@ -98,7 +120,6 @@ MainWindow::~MainWindow()
 	delete actBack;
     delete comboPartition;
     delete stretchWidget;
-	delete scanProgress;
 	delete rootPathLabel;
 }
 
@@ -176,8 +197,10 @@ void MainWindow::scanClicked()
 	fileFrame->hide();
 	ui->verticalLayout->removeWidget(fileFrame);
 	ui->verticalLayout->removeWidget(treemap);
-	ui->verticalLayout->addWidget(scanProgress);
-	scanProgress->show();
+	ui->verticalLayout->addWidget(progressBar);
+	rootPathLabel->setText(tr("Scanning..."));
+	progressAnim->start();
+	progressBar->show();
 	// TODO: Prepare progress bar here.
     emit buildTree();
 }
@@ -189,8 +212,9 @@ void MainWindow::scanDone()
 {
 	emit refreshTreemap();
 	// TODO: Hide progress bar here.
-	scanProgress->hide();
-	ui->verticalLayout->removeWidget(scanProgress);
+	progressBar->hide();
+	progressAnim->stop();
+	ui->verticalLayout->removeWidget(progressBar);
 	ui->verticalLayout->addWidget(treemap);
 	ui->verticalLayout->addWidget(fileFrame);
 	treemap->show();

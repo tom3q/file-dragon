@@ -50,6 +50,7 @@ signals:
 	 */
     void treeUpdated();
 	void progressUpdated(int progress);
+	void nowScanning(const QString &);
 
 public slots:
 	/**
