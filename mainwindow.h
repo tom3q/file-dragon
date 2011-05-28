@@ -60,6 +60,7 @@ private:
 	QAction *actBack;
 	QProgressBar *scanProgress;
 	FileFrame *fileFrame;
+	QLabel *rootPathLabel;
 
 	TreeManager *treeManager;
 	FileTree *tree;
