@@ -54,6 +54,7 @@ private:
     QAction *actRedo;
     QAction *actApply;
 	QAction *actCancel;
+	QProgressBar *scanProgress;
 
 	TreeManager *treeManager;
 };

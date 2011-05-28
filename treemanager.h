@@ -49,6 +49,7 @@ signals:
 	 *	Signals that the tree has been updated.
 	 */
     void treeUpdated();
+	void progressUpdated(int progress);
 
 public slots:
 	/**
@@ -72,6 +73,8 @@ public slots:
 private:
 	void scanDir(DirectoryNode *dir);
 
+	qint64 totalUsed;
+	qint64 totalProcessed;
 	FileTree *_tree;
 	bool shouldCancel;
 };
