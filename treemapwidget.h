@@ -78,6 +78,7 @@ public slots:
 signals:
 
 	void fileSelected(FileNode *);
+	void rootChanged(const QString &);
 
 protected:
 	/**
