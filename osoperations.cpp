@@ -18,7 +18,7 @@ OSOperations::OSOperations()
 
 #include <cstdio>
 #include <cstring>
-#include <cassert>
+#include <sys/statvfs.h>
 
 QStringList OSOperations::diskList()
 {
@@ -54,7 +54,12 @@ QStringList OSOperations::diskList()
 
 qint64 OSOperations::getUsedSpace(const QString &disk)
 {
-	assert(0); // unimplemented
+	struct statvfs fiData;
+	char buffer[1024];
+
+	strcpy(buffer, disk.toStdString().c_str());
+	statvfs(buffer, &fiData);
+	return (qint64) (fiData.f_blocks-fiData.f_bfree)*fiData.f_bsize;
 }
 
 #elif defined(_WINDOWS)

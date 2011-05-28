@@ -48,9 +48,15 @@ void TreeManager::buildTree()
 	totalUsed = OSOperations::getUsedSpace(root->getName());
 	assert(totalUsed != 0);
 	totalProcessed = 0;
+
+	emit progressUpdated(0);
 	scanDir(_tree->getRoot());
 	if (shouldCancel)
 		_tree->clear();
+	else
+		emit progressUpdated(100);
+	_tree->filter();
+
 	emit treeUpdated();
 }
 
