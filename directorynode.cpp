@@ -70,3 +70,8 @@ void DirectoryNode::clear()
 
 	dirs_.clear();
 }
+
+bool DirectoryNode::empty() const
+{
+	return files_.empty() && dirs_.empty();
+}
