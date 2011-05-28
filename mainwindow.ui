@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>635</width>
-    <height>545</height>
+    <width>738</width>
+    <height>575</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>635</width>
+     <width>738</width>
      <height>25</height>
     </rect>
    </property>
@@ -37,6 +37,7 @@
     </property>
     <addaction name="actionFilters"/>
     <addaction name="actionCell_coloring"/>
+    <addaction name="actionFile_information"/>
     <addaction name="separator"/>
     <addaction name="actionShow_legend"/>
    </widget>
@@ -91,6 +92,11 @@
    </property>
    <property name="text">
     <string>Show legend</string>
+   </property>
+  </action>
+  <action name="actionFile_information">
+   <property name="text">
+    <string>File information...</string>
    </property>
   </action>
  </widget>

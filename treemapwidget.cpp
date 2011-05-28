@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstdio>
 #include <cmath>
+#include <QDebug>
 
 #include "treemapwidget.h"
 #include "directorynode.h"
@@ -67,6 +68,11 @@ void TreemapWidget::setShowLegend(bool show)
 	repaint();
 }
 
+QSize TreemapWidget::sizeHint() const
+{
+	return QSize(1, 10000);
+}
+
 void TreemapWidget::mousePressEvent(QMouseEvent *event)
 {
 	if (event->button() == Qt::LeftButton)
@@ -81,6 +87,8 @@ void TreemapWidget::mousePressEvent(QMouseEvent *event)
 				selectedNodes_.clear();
 			selectedNodes_.insert(file);
 			repaint();
+
+			emit fileSelected(file);
 		}
 	}
 }

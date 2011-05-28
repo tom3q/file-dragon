@@ -22,12 +22,22 @@ MainWindow::MainWindow(QWidget *parent) :
     treemap = new TreemapWidget(this);
 	ui->verticalLayout->addWidget(treemap);
     treemap->show();
+	connect(treemap, SIGNAL(fileSelected(FileNode*)), this, SLOT(fileClicked(FileNode*)));
+
+	// Frame containing file information
+	fileFrame = new FileFrame(this);
+	ui->verticalLayout->addWidget(fileFrame);
+	fileFrame->show();
     
 	// Create a filter dialog
 	filterDialog = new FilterDialog(this, &treemap->getFileTree());
 
 	// Create coloring dialog
 	coloringDialog = new ColoringDialog(this, treemap);
+
+	// Create file info dialog
+	fileinfoDialog = new FileInfoDialog(this, fileFrame);
+
 	// Create tree manager thread
 	treeManager = new TreeManager(treemap->getFileTree());
 
@@ -48,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Fill partition list (also sends currentIndexChanges signal to treeManager)
 	fillComboPartition();
 
+	// Progressbar
 	scanProgress = new QProgressBar(this);
 	scanProgress->hide();
 	scanProgress->setRange(0, 100);
@@ -60,10 +71,14 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
 	delete treeManager;
-	delete filterDialog;
-    delete treemap;
     delete ui;
 
+	delete filterDialog;
+	delete fileinfoDialog;
+	delete coloringDialog;
+
+	delete treemap;
+	delete fileFrame;
     delete actScan;
     delete actUndo;
     delete actRedo;
@@ -134,10 +149,14 @@ void MainWindow::fillComboPartition()
   */
 void MainWindow::scanClicked()
 {
+	fileFrame->updateInfo(0);
+
 	actScan->setEnabled(false);
 	actCancel->setEnabled(true);
 	comboPartition->setEnabled(false);
 	treemap->hide();
+	fileFrame->hide();
+	ui->verticalLayout->removeWidget(fileFrame);
 	ui->verticalLayout->removeWidget(treemap);
 	ui->verticalLayout->addWidget(scanProgress);
 	scanProgress->show();
@@ -155,7 +174,9 @@ void MainWindow::scanDone()
 	scanProgress->hide();
 	ui->verticalLayout->removeWidget(scanProgress);
 	ui->verticalLayout->addWidget(treemap);
+	ui->verticalLayout->addWidget(fileFrame);
 	treemap->show();
+	fileFrame->show();
 	comboPartition->setEnabled(true);
 	actScan->setEnabled(true);
 	actCancel->setEnabled(false);
@@ -164,6 +185,11 @@ void MainWindow::scanDone()
 void MainWindow::cancelClicked()
 {
 	treeManager->cancel();
+}
+
+void MainWindow::fileClicked(FileNode *file)
+{
+	fileFrame->updateInfo(file);
 }
 
 void MainWindow::changeEvent(QEvent *e)
@@ -191,4 +217,9 @@ void MainWindow::on_actionCell_coloring_triggered()
 void MainWindow::on_actionShow_legend_changed()
 {
 	treemap->setShowLegend(ui->actionShow_legend->isChecked());
+}
+
+void MainWindow::on_actionFile_information_triggered()
+{
+	fileinfoDialog->show();
 }

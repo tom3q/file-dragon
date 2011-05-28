@@ -65,12 +65,18 @@ public:
 
 	void setShowLegend(bool show);
 
+	QSize sizeHint() const;
+
 public slots:
 	/**
 	  * This slot is called when FileTree changes its contents.
 		Clears selection and redraws the widget.
 	  */
     void fileTreeUpdated();
+
+signals:
+
+	void fileSelected(FileNode *);
 
 protected:
 	/**

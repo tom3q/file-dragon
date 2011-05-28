@@ -22,7 +22,9 @@ SOURCES += main.cpp\
     filterdialog.cpp \
     coloringdialog.cpp \
     daterenderer.cpp \
-    treemanager.cpp
+    treemanager.cpp \
+    fileinfodialog.cpp \
+    fileframe.cpp
 
 HEADERS  += mainwindow.h \
     treemapwidget.h \
@@ -37,10 +39,13 @@ HEADERS  += mainwindow.h \
     coloringdialog.h \
     daterenderer.h \
     filterdialog.h \
-    treemanager.h
+    treemanager.h \
+    fileinfodialog.h \
+    fileframe.h
 
 FORMS    += mainwindow.ui \
     filterdialog.ui \
-    coloringdialog.ui
+    coloringdialog.ui \
+    fileinfodialog.ui
 
 QMAKE_CXXFLAGS += -g
