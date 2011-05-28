@@ -25,8 +25,9 @@ void DefaultRenderer::renderCell(QPainter &painter, QRectF &rect, FileNode *file
     painter.drawRect(rect);
 }
 
-void DefaultRenderer::renderLegend(QPainter &painter, QRectF &rect)
+void DefaultRenderer::renderLegend(QPainter &, QRectF &)
 {
+
 }
 
 bool DefaultRenderer::hasLegend() const
