@@ -112,6 +112,8 @@ void TreemapWidget::mouseDoubleClickEvent(QMouseEvent *event)
 			startVert ^= 1;
 			currentRoot_ = dir;
 			repaint();
+
+			emit rootChanged(currentRoot_->getName());
 		}
 	}
 }
@@ -159,6 +161,8 @@ void TreemapWidget::fileTreeUpdated()
 	currentRoot_ = tree_->getRoot();
 	selectedNodes_.clear();
     update();
+
+	emit rootChanged(currentRoot_->getName());
 }
 
 void TreemapWidget::back()
@@ -166,8 +170,10 @@ void TreemapWidget::back()
 	if (currentRoot_->getParent()) {
 		currentRoot_ = (DirectoryNode*) currentRoot_->getParent();
 		startVert ^= 1;
+		update();
+
+		emit rootChanged(currentRoot_->getName());
 	}
-	update();
 }
 
 void TreemapWidget::drawDirVert(QPainter &painter, QRectF &rect, DirectoryNode *dir)
