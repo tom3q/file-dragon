@@ -192,7 +192,13 @@ FileNode *TreemapWidget::detectFile(int x, int y)
 	// if legend is shown, drawing is moved down and detection rectangle
 	// also should be moved down
 	if (showLegend_ && renderer_->hasLegend())
+	{
 		dirRect.setY(LEGEND_HEIGHT+LEGEND_MARGIN);
+
+		// if users clicked legend, no detection should take place
+		if (y <= LEGEND_HEIGHT+LEGEND_MARGIN)
+			return 0;
+	}
 
 	while (true)
 	{

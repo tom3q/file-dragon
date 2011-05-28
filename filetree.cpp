@@ -43,10 +43,14 @@ void FileTree::setFilter(FileFilter &f)
 {
 	*filter_ = f;
 
-	if (root_ != 0)
-	{
-		filterDir(root_);
-	}
+	assert(root_ != 0);
+	filterDir(root_);
+}
+
+void FileTree::filter()
+{
+	assert(root_ != 0);
+	filterDir(root_);
 }
 
 /**

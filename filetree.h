@@ -18,6 +18,7 @@ public:
 
     void clear();
 	void setFilter(FileFilter &);
+	void filter();
     bool isEmpty() const;
 
     DirectoryNode *getRoot() const;
