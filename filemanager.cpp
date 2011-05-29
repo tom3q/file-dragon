@@ -63,7 +63,7 @@ void FileManager::flush()
 		emit nowRemoving(path);
 		dir.remove(path);
 
-		emit progressUpdated(100 * cur / count);
+		emit progressUpdated((100 * ++cur) / count);
 
 		if (shouldCancel_)
 			break;
