@@ -24,7 +24,9 @@ SOURCES += main.cpp\
     daterenderer.cpp \
     treemanager.cpp \
     fileinfodialog.cpp \
-    fileframe.cpp
+    fileframe.cpp \
+	filemanager.cpp \
+	queuedialog.cpp
 
 HEADERS  += mainwindow.h \
     treemapwidget.h \
@@ -41,11 +43,14 @@ HEADERS  += mainwindow.h \
     filterdialog.h \
     treemanager.h \
     fileinfodialog.h \
-    fileframe.h
+    fileframe.h \
+	filemanager.h \
+	queuedialog.h
 
 FORMS    += mainwindow.ui \
     filterdialog.ui \
     coloringdialog.ui \
-    fileinfodialog.ui
+    fileinfodialog.ui \
+	queuedialog.ui
 
 RESOURCES	+= FileDragon.qrc
