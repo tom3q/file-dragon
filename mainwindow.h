@@ -11,6 +11,8 @@
 #include "filetree.h"
 #include "treemanager.h"
 #include "fileframe.h"
+#include "filemanager.h"
+#include "queuedialog.h"
 
 namespace Ui {
     class MainWindow;
@@ -27,6 +29,7 @@ public:
 signals:
 	void buildTree();
 	void refreshTreemap();
+	void flushQueue();
 
 protected:
     void changeEvent(QEvent *e);
@@ -40,6 +43,10 @@ private slots:
 	void fileClicked(FileNode *);
 	void on_actionShow_legend_changed();
 	void on_actionFile_information_triggered();
+	void applyClicked();
+	void deleteClicked();
+	void queueAccepted();
+	void flushDone();
 
 private:
     void createActions();
@@ -50,6 +57,7 @@ private:
 	FilterDialog *filterDialog;
 	ColoringDialog *coloringDialog;
 	FileInfoDialog *fileinfoDialog;
+	QueueDialog *queueDialog;
     TreemapWidget *treemap;
     QComboBox *comboPartition;
     QLabel *stretchWidget;
@@ -59,6 +67,7 @@ private:
     QAction *actApply;
 	QAction *actCancel;
 	QAction *actBack;
+	QAction *actDelete;
 	QProgressBar *scanProgress;
 	FileFrame *fileFrame;
 	QLabel *rootPathLabel;
@@ -70,6 +79,7 @@ private:
 
 	TreeManager *treeManager;
 	FileTree *tree;
+	FileManager *fileManager;
 };
 
 #endif // MAINWINDOW_H
