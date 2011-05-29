@@ -108,7 +108,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(queueDialog, SIGNAL(accepted()), this, SLOT(queueAccepted()));
 	connect(this, SIGNAL(flushQueue()), fileManager, SLOT(flush()), Qt::QueuedConnection);
 
-	connect(fileManager, SIGNAL(nowDeleting(const QString &)), nowScanningLabel, SLOT(setText(const QString &)));
+	connect(fileManager, SIGNAL(nowRemoving(const QString &)), nowScanningLabel, SLOT(setText(const QString &)));
 	connect(fileManager, SIGNAL(progressUpdated(int)), scanProgress, SLOT(setValue(int)));
 
 	connect(fileManager, SIGNAL(done()), this, SLOT(flushDone()));
