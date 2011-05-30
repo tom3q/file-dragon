@@ -73,44 +73,53 @@ void TreeManager::scanDir(DirectoryNode *dir)
     QDir currentDir(path);
     double sizeSum = 0;
 
-	currentDir.setFilter( QDir::Files | QDir::NoSymLinks );
-    QFileInfoList entries = currentDir.entryInfoList();
-	for (int i = 0; i < entries.size(); ++i)
-    {
-		const QFileInfo &info = entries.at(i);
+    currentDir.setFilter( QDir::Files | QDir::NoSymLinks );
+	{
+		const QFileInfoList entries = currentDir.entryInfoList();
+		for (int i = 0; i < entries.size(); ++i)
+		{
+			const QFileInfo &info = entries.at(i);
 
-        FileNode *fileNode = new FileNode(info);
-        sizeSum += info.size();
+			FileNode *fileNode = new FileNode(info);
+			sizeSum += info.size();
 
-		totalProcessed += info.size();
-		emit progressUpdated((100 * totalProcessed) / totalUsed);
+			totalProcessed += info.size();
+			emit progressUpdated((100 * totalProcessed) / totalUsed);
 
-        dir->addFile(fileNode);
+			dir->addFile(fileNode);
 
-		if (shouldCancel)
-			return;
-    }
+			if (shouldCancel)
+				return;
+		}
+	}
 
     QFileInfo currentInfo;
     currentInfo.setFile(path);
 
-	currentDir.setFilter( QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks );
-    QFileInfoList dirEntries = currentDir.entryInfoList();
-    for (int i = 0; i < dirEntries.size(); ++i)
-    {
-		const QFileInfo &info = dirEntries.at(i);
+    currentDir.setFilter( QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks );
+	{
+		const QFileInfoList dirEntries = currentDir.entryInfoList();
+		for (int i = 0; i < dirEntries.size(); ++i)
+		{
+			const QFileInfo &info = dirEntries.at(i);
 
-        if (info == currentInfo)
-            continue;
+			if (info == currentInfo)
+				continue;
 
-		DirectoryNode *dirNode = dir->addDir(info.absoluteFilePath());
-		emit nowScanning(info.absoluteFilePath());
-		scanDir(dirNode);
-        sizeSum += dirNode->getSize();
+			dir->addDir(info.absoluteFilePath());
+		}
+	}
+
+	for (int i = 0; i < dir->getDirCount(); ++i)
+	{
+		DirectoryNode *d = dir->getDir(i);
+		emit nowScanning(d->getName());
+		scanDir(d);
+        sizeSum += d->getSize();
 
 		if (shouldCancel)
 			return;
-    }
+	}
 
     dir->setSize(sizeSum);
 }

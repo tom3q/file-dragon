@@ -57,6 +57,10 @@ public:
 	  */
 	FileNode *getSelected(int index);
 
+	const QStringList getSelectedFiles() const;
+
+	void removeSelection();
+
 	/**
 	  * Checks if user selected a given file.
 	  *	@param node FileNode pointer.
