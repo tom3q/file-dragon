@@ -8,7 +8,7 @@
 using namespace std;
 
 TreemapWidget::TreemapWidget(QWidget *parent) :
-    QWidget(parent)
+	QGLWidget(parent)
 {
 	setAutoFillBackground(false);
 

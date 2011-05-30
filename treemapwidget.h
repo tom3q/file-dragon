@@ -1,7 +1,7 @@
 #ifndef TREEMAPWIDGET_H
 #define TREEMAPWIDGET_H
 
-#include <QWidget>
+#include <QGLWidget>
 #include <QPainter>
 #include <QRect>
 #include <set>
@@ -12,7 +12,7 @@
 
 using namespace std;
 
-class TreemapWidget : public QWidget
+class TreemapWidget : public QGLWidget
 {
     Q_OBJECT
 public:
@@ -22,7 +22,7 @@ public:
 	/**
 	  * Widget constructor.
 	  */
-    explicit TreemapWidget(QWidget *parent = 0);
+	explicit TreemapWidget(QWidget *parent = 0);
 
 	/**
 	  * Widget destructor.

@@ -2,8 +2,6 @@
 #define FILETREE_H
 
 #include <QObject>
-//#include "directorynode.h"
-//#include "filefilter.h"
 
 class DirectoryNode;
 class FileFilter;

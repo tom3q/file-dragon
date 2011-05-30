@@ -15,26 +15,31 @@ public:
     DirectoryNode();
 
 	DirectoryNode *addDir(const QString &);
+
 	inline DirectoryNode *getDir(int index) const
 	{
 	    return dirs_[index];
 	}
+
 	inline int getDirCount() const
 	{
 		return dirs_.size();
 	}
 
 	void addFile(FileNode *);
+
 	inline FileNode *getFile(int index) const
 	{
 		return unfilteredFiles_[index];
 	}
+
 	inline int getFileCount() const
 	{
 		return unfilteredFiles_.size();
 	}
 
 	void clear();
+
 	inline bool empty() const
 	{
 		return files_.empty() && dirs_.empty();
