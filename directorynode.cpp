@@ -24,31 +24,11 @@ DirectoryNode *DirectoryNode::addDir(const QString &name)
 	return node;
 }
 
-DirectoryNode *DirectoryNode::getDir(int index) const
-{
-    return dirs_[index];
-}
-
-int DirectoryNode::getDirCount() const
-{
-    return dirs_.size();
-}
-
 void DirectoryNode::addFile(FileNode *file)
 {
     files_.push_back(file);
     unfilteredFiles_.push_back(file);
     file->setParent(this);
-}
-
-FileNode *DirectoryNode::getFile(int index) const
-{
-    return unfilteredFiles_[index];
-}
-
-int DirectoryNode::getFileCount() const
-{
-    return unfilteredFiles_.size();
 }
 
 void DirectoryNode::clear()
@@ -69,9 +49,4 @@ void DirectoryNode::clear()
 	}
 
 	dirs_.clear();
-}
-
-bool DirectoryNode::empty() const
-{
-	return files_.empty() && dirs_.empty();
 }

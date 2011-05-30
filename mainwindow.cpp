@@ -4,6 +4,7 @@
 #include "filefilter.h"
 #include "osoperations.h"
 #include "treemanager.h"
+#include "filemanager.h"
 
 /**
   * Main window constructor.
@@ -41,8 +42,13 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Create tree manager thread
 	treeManager = new TreeManager(treemap->getFileTree());
 
+	// Create file manager thread and dialog
+	fileManager = new FileManager;
+	queueDialog = new QueueDialog(this, fileManager);
+	connect(actApply, SIGNAL(triggered()), this, SLOT(applyClicked()));
+
 	// Create event chain for scan action
-	connect(actScan, SIGNAL(triggered()), this, SLOT(scanClicked()),  Qt::QueuedConnection);
+	connect(actScan, SIGNAL(triggered()), this, SLOT(scanClicked()));
 	connect(this, SIGNAL(buildTree()), treeManager, SLOT(buildTree()), Qt::QueuedConnection);
 
 	// Create event chain for scan callback
@@ -53,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(comboPartition, SIGNAL(currentIndexChanged(const QString &)), treeManager, SLOT(setRootPath(const QString &)), Qt::QueuedConnection);
 
 	// Connect cancel action to its handler
-	connect(actCancel, SIGNAL(triggered()), this, SLOT(cancelClicked()), Qt::QueuedConnection);
+	connect(actCancel, SIGNAL(triggered()), this, SLOT(cancelClicked()));
 
 	// Fill partition list (also sends currentIndexChanges signal to treeManager)
 	fillComboPartition();
@@ -61,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Progressbar
 	scanProgress = new QProgressBar();
 	scanProgress->setRange(0, 100);
-	connect(treeManager, SIGNAL(progressUpdated(int)), scanProgress, SLOT(setValue(int)), Qt::QueuedConnection);
+	connect(treeManager, SIGNAL(progressUpdated(int)), scanProgress, SLOT(setValue(int)));
 
 	// Create a label for displaying currently scanned directory
 	nowScanningLabel = new QLabel();
@@ -73,6 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	progressAnimLabel = new QLabel();
 	progressAnimLabel->setMovie(progressAnim);
 	progressAnimLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+	progressAnim->setCacheMode(QMovie::CacheAll);
 
 	// Progress bar layout and widget
 	progressBarLayout = new QVBoxLayout();
@@ -93,6 +100,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Connect treemap to the label to signal path changes
 	connect(treemap, SIGNAL(rootChanged(const QString &)), rootPathLabel, SLOT(setText(const QString &)));
+
+	//
+	connect(actDelete, SIGNAL(triggered()), this, SLOT(deleteClicked()));
+
+	//
+	connect(queueDialog, SIGNAL(accepted()), this, SLOT(queueAccepted()));
+	connect(this, SIGNAL(flushQueue()), fileManager, SLOT(flush()), Qt::QueuedConnection);
+
+	connect(fileManager, SIGNAL(nowRemoving(const QString &)), nowScanningLabel, SLOT(setText(const QString &)));
+	connect(fileManager, SIGNAL(progressUpdated(int)), scanProgress, SLOT(setValue(int)));
+
+	connect(fileManager, SIGNAL(done()), this, SLOT(flushDone()));
 }
 
 /**
@@ -100,6 +119,7 @@ MainWindow::MainWindow(QWidget *parent) :
   */
 MainWindow::~MainWindow()
 {
+	delete fileManager;
 	delete treeManager;
     delete ui;
 
@@ -118,6 +138,7 @@ MainWindow::~MainWindow()
     delete actApply;
 	delete actCancel;
 	delete actBack;
+	delete actDelete;
     delete comboPartition;
     delete stretchWidget;
 	delete rootPathLabel;
@@ -146,6 +167,9 @@ void MainWindow::createActions()
 
 	actBack = new QAction(tr("Back"), this);
 	actBack->setStatusTip(tr("Returns to the parent directory"));
+
+	actDelete = new QAction(tr("Delete"), this);
+	actDelete->setStatusTip(tr("Queues selected files for deletion"));
 }
 
 /**
@@ -160,6 +184,7 @@ void MainWindow::createMenus()
     ui->mainToolBar->addAction(actUndo);
     ui->mainToolBar->addAction(actRedo);
     ui->mainToolBar->addSeparator();
+	ui->mainToolBar->addAction(actDelete);
     ui->mainToolBar->addAction(actApply);
 	ui->mainToolBar->addSeparator();
 	ui->mainToolBar->addAction(actBack);
@@ -189,7 +214,8 @@ void MainWindow::fillComboPartition()
 void MainWindow::scanClicked()
 {
 	fileFrame->updateInfo(0);
-
+	actApply->setEnabled(false);
+	actDelete->setEnabled(false);
 	actScan->setEnabled(false);
 	actCancel->setEnabled(true);
 	comboPartition->setEnabled(false);
@@ -201,7 +227,7 @@ void MainWindow::scanClicked()
 	rootPathLabel->setText(tr("Scanning..."));
 	progressAnim->start();
 	progressBar->show();
-	// TODO: Prepare progress bar here.
+
     emit buildTree();
 }
 
@@ -211,7 +237,7 @@ void MainWindow::scanClicked()
 void MainWindow::scanDone()
 {
 	emit refreshTreemap();
-	// TODO: Hide progress bar here.
+
 	progressBar->hide();
 	progressAnim->stop();
 	ui->verticalLayout->removeWidget(progressBar);
@@ -222,11 +248,14 @@ void MainWindow::scanDone()
 	comboPartition->setEnabled(true);
 	actScan->setEnabled(true);
 	actCancel->setEnabled(false);
+	actApply->setEnabled(true);
+	actDelete->setEnabled(true);
 }
 
 void MainWindow::cancelClicked()
 {
 	treeManager->cancel();
+	fileManager->cancel();
 }
 
 void MainWindow::fileClicked(FileNode *file)
@@ -264,4 +293,42 @@ void MainWindow::on_actionShow_legend_changed()
 void MainWindow::on_actionFile_information_triggered()
 {
 	fileinfoDialog->show();
+}
+
+void MainWindow::applyClicked()
+{
+	queueDialog->show();
+}
+
+void MainWindow::deleteClicked()
+{
+	fileManager->queueFiles(treemap->getSelectedFiles());
+	treemap->removeSelection();
+}
+
+void MainWindow::queueAccepted()
+{
+	fileFrame->updateInfo(0);
+	actApply->setEnabled(false);
+	actDelete->setEnabled(false);
+	actScan->setEnabled(false);
+	actCancel->setEnabled(true);
+	comboPartition->setEnabled(false);
+	treemap->hide();
+	fileFrame->hide();
+	ui->verticalLayout->removeWidget(fileFrame);
+	ui->verticalLayout->removeWidget(treemap);
+	ui->verticalLayout->addWidget(progressBar);
+	rootPathLabel->setText(tr("Removing..."));
+	progressAnim->start();
+	progressBar->show();
+
+    emit flushQueue();
+}
+
+void MainWindow::flushDone()
+{
+	rootPathLabel->setText(tr("Scanning..."));
+
+	emit buildTree();
 }
