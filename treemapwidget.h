@@ -8,6 +8,7 @@
 
 #include "filetree.h"
 #include "defaultrenderer.h"
+#include "detectionnode.h"
 
 using namespace std;
 
@@ -95,17 +96,21 @@ protected:
 	void mouseDoubleClickEvent(QMouseEvent *event);
 
 private:
-    void drawDirVert(QPainter &painter, QRectF &rect, DirectoryNode *dir);
-    void drawDirHorz(QPainter &painter, QRectF &rect, DirectoryNode *dir);
-	FileNode *detectFile(int, int);
-	DirectoryNode *detectDirectory(int, int);
+	void drawVert(QPainter &painter, QRectF &rect, list<AbstractNode *> &children, DetectionNode *node);
+	void drawHorz(QPainter &painter, QRectF &rect, list<AbstractNode *> &children, DetectionNode *node);
+	float worstHorz(list<AbstractNode*> &l, double &sum, double &dirSize, QRectF &r);
+	float worstVert(list<AbstractNode*> &l, double &sum, double &dirSize, QRectF &r);
+	float listSum(list<AbstractNode*> &l);
 
+	FileNode *detectFile(int x, int y);
+	DirectoryNode *detectDirectory(int x, int y);
+
+	DetectionNode *detectRoot_;
     FileTree *tree_;
 	DirectoryNode *currentRoot_;
 	DefaultRenderer *renderer_;
 	set<FileNode*> selectedNodes_;
 	bool showLegend_;
-	bool startVert;
 };
 
 #endif // TREEMAPWIDGET_H

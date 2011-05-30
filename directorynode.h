@@ -24,6 +24,8 @@ public:
     int getFileCount() const;
 	bool empty() const;
 
+	bool isDir() {return true;}
+
 private:
     friend class FileTree;
 

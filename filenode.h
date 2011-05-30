@@ -20,6 +20,8 @@ public:
 	void setModified(QDateTime);
 	QDateTime getModified() const;
 
+	bool isDir() {return false;}
+
 private:
     QString ext_;
 	QDateTime modified_;

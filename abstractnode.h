@@ -17,6 +17,8 @@ public:
     void setSize(qint64);
     qint64 getSize() const;
 
+	virtual bool isDir() = 0;
+
 private:
     AbstractNode *parent_;
     QString name_;

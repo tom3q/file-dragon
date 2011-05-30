@@ -24,7 +24,9 @@ SOURCES += main.cpp\
     daterenderer.cpp \
     treemanager.cpp \
     fileinfodialog.cpp \
-    fileframe.cpp
+    fileframe.cpp \
+    detectionnode.cpp \
+    detectiontree.cpp
 
 HEADERS  += mainwindow.h \
     treemapwidget.h \
@@ -41,7 +43,9 @@ HEADERS  += mainwindow.h \
     filterdialog.h \
     treemanager.h \
     fileinfodialog.h \
-    fileframe.h
+    fileframe.h \
+    detectionnode.h \
+    detectiontree.h
 
 FORMS    += mainwindow.ui \
     filterdialog.ui \

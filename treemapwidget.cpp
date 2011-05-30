@@ -1,8 +1,6 @@
 #include <QtGui>
-#include <iostream>
-#include <cstdio>
-#include <cmath>
 #include <QDebug>
+#include <QTime>
 
 #include "treemapwidget.h"
 #include "directorynode.h"
@@ -12,22 +10,28 @@ using namespace std;
 TreemapWidget::TreemapWidget(QWidget *parent) :
     QWidget(parent)
 {
-	setAutoFillBackground(true);
+	setAutoFillBackground(false);
 
     // create file tree and connect signals-slots
     tree_ = new FileTree();
 	currentRoot_ = tree_->getRoot();
 
+	// detection tree root
+	detectRoot_ = 0;
+
     // create a cell renderer
 	renderer_ = new DefaultRenderer(this);
 
+	// don't show legend
 	showLegend_ = false;
 }
 
 TreemapWidget::~TreemapWidget()
 {
+	if (detectRoot_)
+		delete detectRoot_;
+	delete renderer_;
     delete tree_;
-    delete renderer_;
 }
 
 void TreemapWidget::setRenderer(DefaultRenderer *cr)
@@ -38,7 +42,7 @@ void TreemapWidget::setRenderer(DefaultRenderer *cr)
 	if (ptr != 0)
 		delete ptr;
 
-	repaint();
+	update();
 }
 
 FileTree &TreemapWidget::getFileTree() const
@@ -66,7 +70,7 @@ bool TreemapWidget::isSelected(FileNode *node) const
 void TreemapWidget::setShowLegend(bool show)
 {
 	showLegend_ = show;
-	repaint();
+	update();
 }
 
 QSize TreemapWidget::sizeHint() const
@@ -94,7 +98,7 @@ void TreemapWidget::mousePressEvent(QMouseEvent *event)
 				selectedNodes_.clear();
 				selectedNodes_.insert(file);
 			}
-			repaint();
+			update();
 
 			emit fileSelected(file);
 		}
@@ -109,13 +113,17 @@ void TreemapWidget::mouseDoubleClickEvent(QMouseEvent *event)
 
 		if (dir != 0)
 		{
-			startVert ^= 1;
 			currentRoot_ = dir;
-			repaint();
+			update();
 
 			emit rootChanged(currentRoot_->getName());
 		}
 	}
+}
+
+bool sortFunc(AbstractNode *i, AbstractNode *j)
+{
+	return i->getSize() > j->getSize();
 }
 
 void TreemapWidget::paintEvent(QPaintEvent *event)
@@ -136,18 +144,29 @@ void TreemapWidget::paintEvent(QPaintEvent *event)
 	else
 		rectangle.setRect(0, 0, size.width()-1, size.height()-1);
 
-	// black filling
-	painter.setBrush(QColor(0, 0, 0));
-	painter.drawRect(rectangle);
-
 	// draw tree
-    if (!currentRoot_->empty()) {
-		if (startVert)
-			drawDirVert(painter, rectangle, currentRoot_);
-		else
-			drawDirHorz(painter, rectangle, currentRoot_);
-	// draw simple filling
+	if (!currentRoot_->empty())
+	{
+		// prepare data for rendering
+		DirectoryNode *dir = currentRoot_;
+		list<AbstractNode *> children;
+		for (int i=0; i<dir->getFileCount(); i++)
+			children.push_back(dir->getFile(i));
+		for (int i=0; i<dir->getDirCount(); i++)
+			children.push_back(dir->getDir(i));
+		children.sort(sortFunc);
+
+		// clear detection tree
+		if (detectRoot_)
+			delete detectRoot_;
+		detectRoot_ = new DetectionNode(QRectF(0, 0, width(), height()));
+
+		// render black filling and files
+		painter.setBrush(QColor(0, 0, 0));
+		painter.drawRect(rectangle);
+		drawHorz(painter, rectangle, children, detectRoot_);
 	}
+	// draw simple filling
 	else
 	{
 		painter.setBrush(QColor(0xDF, 0xDF, 0xDF));
@@ -157,7 +176,6 @@ void TreemapWidget::paintEvent(QPaintEvent *event)
 
 void TreemapWidget::fileTreeUpdated()
 {
-	startVert = true;
 	currentRoot_ = tree_->getRoot();
 	selectedNodes_.clear();
     update();
@@ -169,240 +187,256 @@ void TreemapWidget::back()
 {
 	if (currentRoot_->getParent()) {
 		currentRoot_ = (DirectoryNode*) currentRoot_->getParent();
-		startVert ^= 1;
 		update();
 
 		emit rootChanged(currentRoot_->getName());
 	}
 }
 
-void TreemapWidget::drawDirVert(QPainter &painter, QRectF &rect, DirectoryNode *dir)
+float TreemapWidget::listSum(list<AbstractNode*> &l)
 {
-    QRectF newRect;
-    double dirSize = dir->getSize();
-    float offset = 0, rectWidth;
-
-    for (int i=0; i<dir->getFileCount(); i++)
-    {
-        rectWidth = (double) rect.width() * dir->getFile(i)->getSize() / dirSize;
-        newRect.setRect(rect.x()+offset, rect.y(), rectWidth, rect.height());
-
-		if (newRect.width() >= 1 && newRect.height() >= 1)
-			renderer_->renderCell(painter, newRect, dir->getFile(i));
-        offset += rectWidth;
-    }
-
-    for (int i=0; i<dir->getDirCount(); i++)
-    {
-        if (dir->getDir(i)->getSize() == 0) continue;
-
-        rectWidth = (double) rect.width() * dir->getDir(i)->getSize() / dirSize;
-        newRect.setRect(rect.x()+offset, rect.y(), rectWidth, rect.height());
-
-        drawDirHorz(painter, newRect, dir->getDir(i));
-        offset += rectWidth;
-    }
+	list<AbstractNode*>::iterator it;
+	float sum = 0;
+	for (it = l.begin(); it != l.end(); ++it)
+		sum += (*it)->getSize();
+	return sum;
 }
 
-void TreemapWidget::drawDirHorz(QPainter &painter, QRectF &rect, DirectoryNode *dir)
+float TreemapWidget::worstVert(list<AbstractNode*> &l, double &sum, double &dirSize, QRectF &r)
 {
-    QRectF newRect;
-    double dirSize = dir->getSize();
-    float offset = 0, rectHeight;
+	list<AbstractNode*>::iterator it;
+	float worst = 0, tmp;
 
-    for (int i=0; i<dir->getFileCount(); i++)
-    {
-        rectHeight = (double) rect.height() * dir->getFile(i)->getSize() / dirSize;
-        newRect.setRect(rect.x(), rect.y()+offset, rect.width(), rectHeight);
-
-		if (newRect.height() >= 1 && newRect.width() >= 1)
-			renderer_->renderCell(painter, newRect, dir->getFile(i));
-        offset += rectHeight;
-    }
-
-    for (int i=0; i<dir->getDirCount(); i++)
-    {
-        if (dir->getDir(i)->getSize() == 0) continue;
-
-        rectHeight = (double) rect.height() * dir->getDir(i)->getSize() / dirSize;
-        newRect.setRect(rect.x(), rect.y()+offset, rect.width(), rectHeight);
-
-        drawDirVert(painter, newRect, dir->getDir(i));
-        offset += rectHeight;
-    }
+	for (it = l.begin(); it != l.end(); ++it)
+	{
+		tmp = (float) sum*sum*r.width()/(dirSize*(*it)->getSize()*r.height());
+		if (tmp < 1) tmp = (float) 1.0 / tmp;
+		worst = max<float>(worst, tmp);
+	}
+	return worst;
 }
 
-DirectoryNode *TreemapWidget::detectDirectory(int x, int y)
+float TreemapWidget::worstHorz(list<AbstractNode*> &l, double &sum, double &dirSize, QRectF &r)
 {
-	DirectoryNode *dir = currentRoot_;
-	QRectF dirRect = rect(), currRect;
-	double dirSize, wi, he;
-	int vert = startVert;
+	list<AbstractNode*>::iterator it;
+	float worst = 0, tmp;
 
-	if (currentRoot_->empty()) return 0;
-
-	// if legend is shown, drawing is moved down and detection rectangle
-	// also should be moved down
-	if (showLegend_ && renderer_->hasLegend())
+	for (it = l.begin(); it != l.end(); ++it)
 	{
-		dirRect.setY(LEGEND_HEIGHT+LEGEND_MARGIN);
+		tmp = (float) dirSize*r.width()*(*it)->getSize()/(sum*sum*r.height());
+		if (tmp < 1) tmp = (float) 1.0 / tmp;
+		worst = max<float>(worst, tmp);
+	}
+	return worst;
+}
 
-		// if users clicked legend, no detection should take place
-		if (y <= LEGEND_HEIGHT+LEGEND_MARGIN)
-			return 0;
+void TreemapWidget::drawVert(QPainter &painter, QRectF &rect, list<AbstractNode*> &children, DetectionNode *node)
+{
+	QRectF r;
+	list<AbstractNode*> row;
+	double dirSize = listSum(children), sum = 0;
+	float lastWorst, currWorst, wi, he;
+
+	row.push_back( children.front() );
+	sum += children.front()->getSize();
+	children.pop_front();
+	lastWorst = worstVert(row, sum, dirSize, rect);
+
+	while (!children.empty())
+	{
+		row.push_back( children.front() );
+		sum += children.front()->getSize();
+		children.pop_front();
+		currWorst = worstVert(row, sum, dirSize, rect);
+
+		if (currWorst > lastWorst)
+		{
+			children.push_front( row.back() );
+			sum -= row.back()->getSize();
+			row.pop_back();
+			break;
+		}
+		else if (children.empty())
+			break;
+		else
+			lastWorst = currWorst;
 	}
 
-	dirSize = dir->getSize();
-
-	if (vert % 2)
+	if (!row.empty())
 	{
-		currRect.setX(dirRect.x());
-		currRect.setY(dirRect.y());
-		currRect.setHeight(dirRect.height());
-
-		for (int i = 0; i < dir->getFileCount(); i++)
+		float offset = 0;
+		for (list<AbstractNode*>::iterator it=row.begin(); it!=row.end(); ++it)
 		{
-			wi = (double) dirRect.width() * dir->getFile(i)->getSize() / dirSize;
-			currRect.setWidth(wi);
+			wi = (float) sum*rect.width()/dirSize;
+			he = (float) (*it)->getSize()*rect.height()/sum;
+			r.setRect(rect.x(), rect.y()+offset, wi, he);
 
-			if (currRect.contains(x, y))
-				return 0;
+			if ((*it)->isDir())
+			{
+				list<AbstractNode*> grandChildren;
+				DirectoryNode *dir = (DirectoryNode* ) *it;
 
-			currRect.setX(currRect.x() + currRect.width());
-		}
+				if (dir->getDirCount()+dir->getFileCount() > 0)
+				{
+					for (int i=0; i<dir->getFileCount(); ++i)
+						grandChildren.push_back(dir->getFile(i));
+					for (int i=0; i<dir->getDirCount(); ++i)
+						grandChildren.push_back(dir->getDir(i));
 
-		for (int i = 0; i < dir->getDirCount(); i++)
-		{
-			wi = (double) dirRect.width() * dir->getDir(i)->getSize() / dirSize;
-			currRect.setWidth(wi);
+					DetectionNode *newNode = new DetectionNode(r);
+					node->addChild(newNode);
 
-			if (currRect.contains(x, y))
-				return dir->getDir(i);
+					grandChildren.sort(sortFunc);
+					if (r.height() < r.width())
+						drawHorz(painter, r, grandChildren, newNode);
+					else
+						drawVert(painter, r, grandChildren, newNode);
+				}
+			}
+			else
+			{
+				FileNode *file = (FileNode *)(*it);
+				DetectionNode *newNode = new DetectionNode(r, file);
+				node->addChild(newNode);
 
-			currRect.setX(currRect.x() + currRect.width());
-		}
-	}
-	else
-	{
-		currRect.setX(dirRect.x());
-		currRect.setY(dirRect.y());
-		currRect.setWidth(dirRect.width());
+				if (r.height() > 2 && r.width() > 2)
+					renderer_->renderCell(painter, r, file);
+			}
 
-		for (int i = 0; i < dir->getFileCount(); i++)
-		{
-			he = (double) dirRect.height() * dir->getFile(i)->getSize() / dirSize;
-			currRect.setHeight(he);
-
-			if (currRect.contains(x, y))
-				return 0;
-
-			currRect.setY(currRect.y() + currRect.height());
-		}
-
-		for (int i = 0; i < dir->getDirCount(); i++)
-		{
-			he = (double) dirRect.height() * dir->getDir(i)->getSize() / dirSize;
-			currRect.setHeight(he);
-
-			if (currRect.contains(x, y))
-				return dir->getDir(i);
-
-			currRect.setY(currRect.y() + currRect.height());
+			offset += he;
 		}
 	}
 
-	return 0;
+	if (!children.empty())
+	{
+		wi = (float) sum*rect.width()/dirSize;
+		r.setRect(rect.x()+wi, rect.y(), rect.width()-wi, rect.height());
+
+		if (r.height() < r.width())
+			drawHorz(painter, r, children, node);
+		else
+			drawVert(painter, r, children, node);
+	}
+}
+
+void TreemapWidget::drawHorz(QPainter &painter, QRectF &rect, list<AbstractNode*> &children, DetectionNode *node)
+{
+	QRectF r;
+	list<AbstractNode*> row;
+	double dirSize = listSum(children), sum = 0;
+	float lastWorst, currWorst, wi, he;
+
+	row.push_back( children.front() );
+	sum += children.front()->getSize();
+	children.pop_front();
+	lastWorst = worstHorz(row, sum, dirSize, rect);
+
+	while (!children.empty())
+	{
+		row.push_back( children.front() );
+		sum += children.front()->getSize();
+		children.pop_front();
+		currWorst = worstHorz(row, sum, dirSize, rect);
+
+		if (currWorst > lastWorst)
+		{
+			children.push_front( row.back() );
+			sum -= row.back()->getSize();
+			row.pop_back();
+			break;
+		}
+		else if (children.empty())
+			break;
+		else
+			lastWorst = currWorst;
+	}
+
+	if (!row.empty())
+	{
+		float offset = 0;
+		for (list<AbstractNode*>::iterator it=row.begin(); it!=row.end(); ++it)
+		{
+			wi = (float) (*it)->getSize()*rect.width()/sum;
+			he = (float) sum*rect.height()/dirSize;
+			r.setRect(rect.x()+offset, rect.y(), wi, he);
+
+			if ((*it)->isDir())
+			{
+				list<AbstractNode*> grandChildren;
+				DirectoryNode *dir = (DirectoryNode* ) *it;
+
+				if (dir->getDirCount()+dir->getFileCount() > 0)
+				{
+					for (int i=0; i<dir->getFileCount(); ++i)
+						grandChildren.push_back(dir->getFile(i));
+					for (int i=0; i<dir->getDirCount(); ++i)
+						grandChildren.push_back(dir->getDir(i));
+
+					DetectionNode *newNode = new DetectionNode(r);
+					node->addChild(newNode);
+
+					grandChildren.sort(sortFunc);
+					if (r.height() < r.width())
+						drawHorz(painter, r, grandChildren, newNode);
+					else
+						drawVert(painter, r, grandChildren, newNode);
+				}
+			}
+			else
+			{
+				FileNode *file = (FileNode *)(*it);
+				DetectionNode *newNode = new DetectionNode(r, file);
+				node->addChild(newNode);
+
+				if (r.height() > 2 && r.width() > 2)
+					renderer_->renderCell(painter, r, file);
+			}
+
+			offset += wi;
+		}
+	}
+
+	if (!children.empty())
+	{
+		he = (float) sum*rect.height()/dirSize;
+		r.setRect(rect.x(), rect.y()+he, rect.width(), rect.height()-he);
+		if (r.height() < r.width())
+			drawHorz(painter, r, children, node);
+		else
+			drawVert(painter, r, children, node);
+	}
 }
 
 FileNode *TreemapWidget::detectFile(int x, int y)
 {
-	DirectoryNode *dir = currentRoot_;
-	QRectF dirRect = rect(), currRect;
-	double dirSize, wi, he;
-	int vert = startVert;
+	DetectionNode *dNode = detectRoot_;
 
 	if (currentRoot_->empty()) return 0;
+	if (detectRoot_ == 0) return 0;
 
-	// if legend is shown, drawing is moved down and detection rectangle
-	// also should be moved down
-	if (showLegend_ && renderer_->hasLegend())
+	while (dNode->getFile() == 0)
 	{
-		dirRect.setY(LEGEND_HEIGHT+LEGEND_MARGIN);
-
-		// if users clicked legend, no detection should take place
-		if (y <= LEGEND_HEIGHT+LEGEND_MARGIN)
-			return 0;
-	}
-
-	while (true)
-	{
-		dirSize = dir->getSize();
-
-		if (vert % 2)
+		for (int i=0; i<dNode->childrenCount(); ++i)
 		{
-			currRect.setX(dirRect.x());
-			currRect.setY(dirRect.y());
-			currRect.setHeight(dirRect.height());
-
-			for (int i = 0; i < dir->getFileCount(); i++)
+			if (dNode->child(i)->contains(x, y))
 			{
-				wi = (double) dirRect.width() * dir->getFile(i)->getSize() / dirSize;
-				currRect.setWidth(wi);
-
-				if (currRect.contains(x, y))
-					return dir->getFile(i);
-
-				currRect.setX(currRect.x() + currRect.width());
-			}
-
-			for (int i = 0; i < dir->getDirCount(); i++)
-			{
-				wi = (double) dirRect.width() * dir->getDir(i)->getSize() / dirSize;
-				currRect.setWidth(wi);
-
-				if (currRect.contains(x, y))
-				{
-					dir = dir->getDir(i);
-					dirRect = currRect;
-					vert++;
-					break;
-				}
-
-				currRect.setX(currRect.x() + currRect.width());
-			}
-		}
-		else
-		{
-			currRect.setX(dirRect.x());
-			currRect.setY(dirRect.y());
-			currRect.setWidth(dirRect.width());
-
-			for (int i = 0; i < dir->getFileCount(); i++)
-			{
-				he = (double) dirRect.height() * dir->getFile(i)->getSize() / dirSize;
-				currRect.setHeight(he);
-
-				if (currRect.contains(x, y))
-					return dir->getFile(i);
-
-				currRect.setY(currRect.y() + currRect.height());
-			}
-
-			for (int i = 0; i < dir->getDirCount(); i++)
-			{
-				he = (double) dirRect.height() * dir->getDir(i)->getSize() / dirSize;
-				currRect.setHeight(he);
-
-				if (currRect.contains(x, y))
-				{
-					dir = dir->getDir(i);
-					dirRect = currRect;
-					vert++;
-					break;
-				}
-
-				currRect.setY(currRect.y() + currRect.height());
+				dNode = dNode->child(i);
+				break;
 			}
 		}
 	}
+
+	return dNode->getFile();
+}
+
+DirectoryNode *TreemapWidget::detectDirectory(int x, int y)
+{
+	AbstractNode *node = detectFile(x, y);
+
+	if (node == 0) return 0;
+	if (node->getParent() == currentRoot_) return currentRoot_;
+
+	while (node->getParent() != currentRoot_)
+		node = node->getParent();
+	return (DirectoryNode*) node;
 }

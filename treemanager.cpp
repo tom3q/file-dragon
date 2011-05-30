@@ -73,7 +73,7 @@ void TreeManager::scanDir(DirectoryNode *dir)
     QDir currentDir(path);
     double sizeSum = 0;
 
-    currentDir.setFilter( QDir::Files );
+	currentDir.setFilter( QDir::Files | QDir::NoSymLinks );
     QFileInfoList entries = currentDir.entryInfoList();
 	for (int i = 0; i < entries.size(); ++i)
     {
@@ -94,7 +94,7 @@ void TreeManager::scanDir(DirectoryNode *dir)
     QFileInfo currentInfo;
     currentInfo.setFile(path);
 
-    currentDir.setFilter( QDir::Dirs | QDir::NoDotAndDotDot );
+	currentDir.setFilter( QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks );
     QFileInfoList dirEntries = currentDir.entryInfoList();
     for (int i = 0; i < dirEntries.size(); ++i)
     {
