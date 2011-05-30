@@ -46,8 +46,10 @@ void FileManager::flush()
 {
 	shouldCancel_ = false;
 
-	if (queuedFiles_.empty())
+	if (queuedFiles_.empty()) {
+		emit done();
 		return;
+	}
 
 	emit progressUpdated(0);
 
