@@ -8,7 +8,11 @@
 using namespace std;
 
 TreemapWidget::TreemapWidget(QWidget *parent) :
+#ifdef USE_OPENGL
 	QGLWidget(parent)
+#else
+	QWidget(parent)
+#endif
 {
 	setAutoFillBackground(true);
 
@@ -145,11 +149,6 @@ void TreemapWidget::mouseDoubleClickEvent(QMouseEvent *event)
 	}
 }
 
-bool sortFunc(AbstractNode *i, AbstractNode *j)
-{
-	return i->getSize() > j->getSize();
-}
-
 void TreemapWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
@@ -173,12 +172,11 @@ void TreemapWidget::paintEvent(QPaintEvent *event)
 	{
 		// prepare data for rendering
 		DirectoryNode *dir = currentRoot_;
-		list<AbstractNode *> children;
+		set<AbstractNode *, SortFunc> children;
 		for (int i=0; i<dir->getFileCount(); i++)
-			children.push_back(dir->getFile(i));
+			children.insert(dir->getFile(i));
 		for (int i=0; i<dir->getDirCount(); i++)
-			children.push_back(dir->getDir(i));
-		children.sort(sortFunc);
+			children.insert(dir->getDir(i));
 
 		// clear detection tree
 		if (detectRoot_)
@@ -217,67 +215,76 @@ void TreemapWidget::back()
 	}
 }
 
-float TreemapWidget::listSum(list<AbstractNode*> &l)
+float TreemapWidget::listSum(set<AbstractNode*, SortFunc> &l)
 {
-	list<AbstractNode*>::iterator it;
+	set<AbstractNode*, SortFunc>::iterator it;
 	float sum = 0;
 	for (it = l.begin(); it != l.end(); ++it)
 		sum += (*it)->getSize();
 	return sum;
 }
 
-float TreemapWidget::worstVert(list<AbstractNode*> &l, double &sum, double &dirSize, QRectF &r)
+float TreemapWidget::worstVert(set<AbstractNode*, SortFunc> &l, double &sum, double &dirSize, QRectF &r)
 {
-	list<AbstractNode*>::iterator it;
 	float worst = 0, tmp;
 
-	for (it = l.begin(); it != l.end(); ++it)
-	{
-		tmp = (float) sum*sum*r.width()/(dirSize*(*it)->getSize()*r.height());
-		if (tmp < 1) tmp = (float) 1.0 / tmp;
-		worst = max<float>(worst, tmp);
-	}
+	float intermediate = sum*sum*r.width() / (dirSize*r.height());
+	tmp = (float) intermediate/(*l.begin())->getSize();
+	if (tmp < 1)
+		tmp = (float) 1.0 / tmp;
+	worst = max<float>(worst, tmp);
+	tmp = (float) intermediate/(*l.rbegin())->getSize();
+	if (tmp < 1)
+		tmp = (float) 1.0 / tmp;
+	worst = max<float>(worst, tmp);
+
 	return worst;
 }
 
-float TreemapWidget::worstHorz(list<AbstractNode*> &l, double &sum, double &dirSize, QRectF &r)
+float TreemapWidget::worstHorz(set<AbstractNode*, SortFunc> &l, double &sum, double &dirSize, QRectF &r)
 {
-	list<AbstractNode*>::iterator it;
 	float worst = 0, tmp;
 
-	for (it = l.begin(); it != l.end(); ++it)
-	{
-		tmp = (float) dirSize*r.width()*(*it)->getSize()/(sum*sum*r.height());
-		if (tmp < 1) tmp = (float) 1.0 / tmp;
-		worst = max<float>(worst, tmp);
-	}
+	float intermediate = dirSize*r.width()/(sum*sum*r.height());
+	tmp = (float) intermediate*(*l.begin())->getSize();
+	if (tmp < 1)
+		tmp = (float) 1.0 / tmp;
+	worst = max<float>(worst, tmp);
+	tmp = (float) intermediate*(*l.rbegin())->getSize();
+	if (tmp < 1)
+		tmp = (float) 1.0 / tmp;
+	worst = max<float>(worst, tmp);
+
 	return worst;
 }
 
-void TreemapWidget::drawVert(QPainter &painter, QRectF &rect, list<AbstractNode*> &children, DetectionNode *node)
+void TreemapWidget::drawVert(QPainter &painter, QRectF &rect, set<AbstractNode*, SortFunc> &children, DetectionNode *node)
 {
 	QRectF r;
-	list<AbstractNode*> row;
+	set<AbstractNode*, SortFunc> row;
 	double dirSize = listSum(children), sum = 0;
 	float lastWorst, currWorst, wi, he;
 
-	row.push_back( children.front() );
-	sum += children.front()->getSize();
-	children.pop_front();
+	set<AbstractNode*, SortFunc>::iterator first;
+	first = children.begin();
+	row.insert( *first );
+	sum += (*first)->getSize();
+	children.erase(first);
 	lastWorst = worstVert(row, sum, dirSize, rect);
 
 	while (!children.empty())
 	{
-		row.push_back( children.front() );
-		sum += children.front()->getSize();
-		children.pop_front();
+		set<AbstractNode*, SortFunc>::iterator it;
+		it = row.insert( *children.begin() ).first;
+		sum += (*children.begin())->getSize();
+		children.erase(children.begin());
 		currWorst = worstVert(row, sum, dirSize, rect);
 
 		if (currWorst > lastWorst)
 		{
-			children.push_front( row.back() );
-			sum -= row.back()->getSize();
-			row.pop_back();
+			children.insert( *it );
+			sum -= (*it)->getSize();
+			row.erase(it);
 			break;
 		}
 		else if (children.empty())
@@ -289,7 +296,7 @@ void TreemapWidget::drawVert(QPainter &painter, QRectF &rect, list<AbstractNode*
 	if (!row.empty())
 	{
 		float offset = 0;
-		for (list<AbstractNode*>::iterator it=row.begin(); it!=row.end(); ++it)
+		for (set<AbstractNode*, SortFunc>::iterator it=row.begin(); it!=row.end(); ++it)
 		{
 			wi = (float) sum*rect.width()/dirSize;
 			he = (float) (*it)->getSize()*rect.height()/sum;
@@ -297,20 +304,19 @@ void TreemapWidget::drawVert(QPainter &painter, QRectF &rect, list<AbstractNode*
 
 			if ((*it)->isDir())
 			{
-				list<AbstractNode*> grandChildren;
+				set<AbstractNode*, SortFunc> grandChildren;
 				DirectoryNode *dir = (DirectoryNode* ) *it;
 
 				if (dir->getDirCount()+dir->getFileCount() > 0)
 				{
 					for (int i=0; i<dir->getFileCount(); ++i)
-						grandChildren.push_back(dir->getFile(i));
+						grandChildren.insert(dir->getFile(i));
 					for (int i=0; i<dir->getDirCount(); ++i)
-						grandChildren.push_back(dir->getDir(i));
+						grandChildren.insert(dir->getDir(i));
 
 					DetectionNode *newNode = new DetectionNode(r);
 					node->addChild(newNode);
 
-					grandChildren.sort(sortFunc);
 					if (r.height() < r.width())
 						drawHorz(painter, r, grandChildren, newNode);
 					else
@@ -343,30 +349,33 @@ void TreemapWidget::drawVert(QPainter &painter, QRectF &rect, list<AbstractNode*
 	}
 }
 
-void TreemapWidget::drawHorz(QPainter &painter, QRectF &rect, list<AbstractNode*> &children, DetectionNode *node)
+void TreemapWidget::drawHorz(QPainter &painter, QRectF &rect, set<AbstractNode*, SortFunc> &children, DetectionNode *node)
 {
 	QRectF r;
-	list<AbstractNode*> row;
+	set<AbstractNode*, SortFunc> row;
 	double dirSize = listSum(children), sum = 0;
 	float lastWorst, currWorst, wi, he;
+	set<AbstractNode*, SortFunc>::iterator first;
 
-	row.push_back( children.front() );
-	sum += children.front()->getSize();
-	children.pop_front();
+	first = children.begin();
+	row.insert( *first );
+	sum += (*first)->getSize();
+	children.erase(first);
 	lastWorst = worstHorz(row, sum, dirSize, rect);
 
 	while (!children.empty())
 	{
-		row.push_back( children.front() );
-		sum += children.front()->getSize();
-		children.pop_front();
+		set<AbstractNode*, SortFunc>::iterator it;
+		it = row.insert( *children.begin() ).first;
+		sum += (*children.begin())->getSize();
+		children.erase(children.begin());
 		currWorst = worstHorz(row, sum, dirSize, rect);
 
 		if (currWorst > lastWorst)
 		{
-			children.push_front( row.back() );
-			sum -= row.back()->getSize();
-			row.pop_back();
+			children.insert( *it );
+			sum -= (*it)->getSize();
+			row.erase(it);
 			break;
 		}
 		else if (children.empty())
@@ -378,7 +387,7 @@ void TreemapWidget::drawHorz(QPainter &painter, QRectF &rect, list<AbstractNode*
 	if (!row.empty())
 	{
 		float offset = 0;
-		for (list<AbstractNode*>::iterator it=row.begin(); it!=row.end(); ++it)
+		for (set<AbstractNode*, SortFunc>::iterator it=row.begin(); it!=row.end(); ++it)
 		{
 			wi = (float) (*it)->getSize()*rect.width()/sum;
 			he = (float) sum*rect.height()/dirSize;
@@ -386,20 +395,19 @@ void TreemapWidget::drawHorz(QPainter &painter, QRectF &rect, list<AbstractNode*
 
 			if ((*it)->isDir())
 			{
-				list<AbstractNode*> grandChildren;
+				set<AbstractNode*, SortFunc> grandChildren;
 				DirectoryNode *dir = (DirectoryNode* ) *it;
 
 				if (dir->getDirCount()+dir->getFileCount() > 0)
 				{
 					for (int i=0; i<dir->getFileCount(); ++i)
-						grandChildren.push_back(dir->getFile(i));
+						grandChildren.insert(dir->getFile(i));
 					for (int i=0; i<dir->getDirCount(); ++i)
-						grandChildren.push_back(dir->getDir(i));
+						grandChildren.insert(dir->getDir(i));
 
 					DetectionNode *newNode = new DetectionNode(r);
 					node->addChild(newNode);
 
-					grandChildren.sort(sortFunc);
 					if (r.height() < r.width())
 						drawHorz(painter, r, grandChildren, newNode);
 					else

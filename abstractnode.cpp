@@ -12,32 +12,4 @@ AbstractNode::AbstractNode()
     size_ = 0;
 }
 
-void AbstractNode::setParent(AbstractNode *parent)
-{
-    this->parent_ = parent;
-}
 
-AbstractNode *AbstractNode::getParent() const
-{
-    return parent_;
-}
-
-void AbstractNode::setName(const QString &name)
-{
-    name_ = name;
-}
-
-QString AbstractNode::getName() const
-{
-    return name_;
-}
-
-void AbstractNode::setSize(qint64 size)
-{
-    size_ = size;
-}
-
-qint64 AbstractNode::getSize() const
-{
-    return size_;
-}

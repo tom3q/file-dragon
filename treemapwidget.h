@@ -1,7 +1,11 @@
 #ifndef TREEMAPWIDGET_H
 #define TREEMAPWIDGET_H
 
+#ifdef USE_OPENGL
 #include <QGLWidget>
+#else
+#include <QWidget>
+#endif
 #include <QPainter>
 #include <QRect>
 #include <set>
@@ -12,7 +16,11 @@
 
 using namespace std;
 
+#ifdef USE_OPENGL
 class TreemapWidget : public QGLWidget
+#else
+class TreemapWidget : public QWidget
+#endif
 {
     Q_OBJECT
 public:
@@ -101,11 +109,19 @@ protected:
 	void mouseDoubleClickEvent(QMouseEvent *event);
 
 private:
-	void drawVert(QPainter &painter, QRectF &rect, list<AbstractNode *> &children, DetectionNode *node);
-	void drawHorz(QPainter &painter, QRectF &rect, list<AbstractNode *> &children, DetectionNode *node);
-	float worstHorz(list<AbstractNode*> &l, double &sum, double &dirSize, QRectF &r);
-	float worstVert(list<AbstractNode*> &l, double &sum, double &dirSize, QRectF &r);
-	float listSum(list<AbstractNode*> &l);
+	class SortFunc
+	{
+	public:
+		inline bool operator()(AbstractNode *i, AbstractNode *j)
+		{
+			return i->getSize() > j->getSize();
+		}
+	};
+	void drawVert(QPainter &painter, QRectF &rect, set<AbstractNode *, SortFunc> &children, DetectionNode *node);
+	void drawHorz(QPainter &painter, QRectF &rect, set<AbstractNode *, SortFunc> &children, DetectionNode *node);
+	float worstHorz(set<AbstractNode*, SortFunc> &l, double &sum, double &dirSize, QRectF &r);
+	float worstVert(set<AbstractNode*, SortFunc> &l, double &sum, double &dirSize, QRectF &r);
+	float listSum(set<AbstractNode*, SortFunc> &l);
 
 	FileNode *detectFile(int x, int y);
 	DirectoryNode *detectDirectory(int x, int y);
