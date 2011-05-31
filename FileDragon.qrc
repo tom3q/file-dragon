@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>loading-gif-animation.gif</file>
+        <file>Images/loading-gif-animation.gif</file>
         <file>Images/arrow-refresh-icon.png</file>
         <file>Images/arrow-undo-icon.png</file>
         <file>Images/arrow-redo-icon.png</file>
