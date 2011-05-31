@@ -63,7 +63,7 @@ public:
 	 * file legend if such option is used.
 	 * @param cr Pointer to a CellRenderer object.
 	 */
-	void setRenderer(DefaultRenderer *cr);
+	void setRenderer(AbstractRenderer *cr);
 
 	/**
 	 * Returns a reference to its FileTree object.
@@ -183,7 +183,7 @@ private:
 	DetectionNode *detectRoot_;
 	FileTree *tree_;
 	DirectoryNode *currentRoot_;
-	DefaultRenderer *renderer_;
+	AbstractRenderer *renderer_;
 	set<FileNode*> selectedNodes_;
 	bool showLegend_;
 };

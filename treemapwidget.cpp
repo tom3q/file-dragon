@@ -49,9 +49,9 @@ TreemapWidget::~TreemapWidget()
 	delete tree_;
 }
 
-void TreemapWidget::setRenderer(DefaultRenderer *cr)
+void TreemapWidget::setRenderer(AbstractRenderer *cr)
 {
-	DefaultRenderer *ptr = renderer_;
+	AbstractRenderer *ptr = renderer_;
 	renderer_ = cr;
 
 	if (ptr != 0)
