@@ -17,8 +17,11 @@ public:
 	explicit ColoringDialog(QWidget *parent, TreemapWidget *cd);
     ~ColoringDialog();
 
+	void saveSettings();
+	void loadSettings();
+
 protected:
-    void changeEvent(QEvent *e);
+	void changeEvent(QEvent *e);
 
 private slots:
 	void on_pushButton_clicked();

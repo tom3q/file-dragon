@@ -16,6 +16,9 @@ public:
 	explicit FilterDialog(QWidget *parent, FileTree *tree);
     ~FilterDialog();
 
+	void saveSettings();
+	void loadSettings();
+
 protected:
     void changeEvent(QEvent *e);
 

@@ -9,11 +9,37 @@ ColoringDialog::ColoringDialog(QWidget *parent, TreemapWidget *cd) :
 {
 	treeWidget_ = cd;
     ui->setupUi(this);
+	loadSettings();
 }
 
 ColoringDialog::~ColoringDialog()
 {
+	saveSettings();
     delete ui;
+}
+
+void ColoringDialog::saveSettings()
+{
+	QSettings settings;
+	int option;
+	if (ui->radioButton->isChecked())
+		option = 0;
+	else
+		option = 1;
+	settings.setValue("coloringdialog/option", option);
+}
+
+void ColoringDialog::loadSettings()
+{
+	QSettings settings;
+	int option = settings.value("coloringdialog/option", 0).toInt();
+	if (option == 0)
+		ui->radioButton->setChecked(true);
+	else
+		ui->radioButton_2->setChecked(true);
+
+	// apply rendering method
+	on_pushButton_2_clicked();
 }
 
 void ColoringDialog::changeEvent(QEvent *e)

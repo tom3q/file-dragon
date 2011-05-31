@@ -1,3 +1,4 @@
+#include <QSettings>
 #include "fileinfodialog.h"
 #include "ui_fileinfodialog.h"
 
@@ -7,11 +8,35 @@ FileInfoDialog::FileInfoDialog(QWidget *parent, FileFrame *frame) :
 {
 	frame_ = frame;
     ui->setupUi(this);
+	loadSettings();
 }
 
 FileInfoDialog::~FileInfoDialog()
 {
+	saveSettings();
     delete ui;
+}
+
+void FileInfoDialog::saveSettings()
+{
+	QSettings settings;
+	settings.setValue("fileinfodialog/name", ui->checkBox->isChecked());
+	settings.setValue("fileinfodialog/size", ui->checkBox_2->isChecked());
+	settings.setValue("fileinfodialog/moddate", ui->checkBox_3->isChecked());
+}
+
+void FileInfoDialog::loadSettings()
+{
+	QSettings settings;
+	bool check1 = settings.value("fileinfodialog/name", true).toBool();
+	bool check2 = settings.value("fileinfodialog/size", false).toBool();
+	bool check3 = settings.value("fileinfodialog/moddate", false).toBool();
+	ui->checkBox->setChecked( check1 );
+	ui->checkBox_2->setChecked( check2 );
+	ui->checkBox_3->setChecked( check3 );
+
+	// apply settings to FileFrame
+	on_pushButton_2_clicked();
 }
 
 void FileInfoDialog::changeEvent(QEvent *e)

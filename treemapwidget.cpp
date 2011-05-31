@@ -10,7 +10,7 @@ using namespace std;
 TreemapWidget::TreemapWidget(QWidget *parent) :
 	QGLWidget(parent)
 {
-	setAutoFillBackground(false);
+	setAutoFillBackground(true);
 
     // create file tree and connect signals-slots
     tree_ = new FileTree();
@@ -86,10 +86,15 @@ bool TreemapWidget::isSelected(FileNode *node) const
 	return selectedNodes_.find(node) != selectedNodes_.end();
 }
 
-void TreemapWidget::setShowLegend(bool show)
+void TreemapWidget::setLegendVisible(bool show)
 {
 	showLegend_ = show;
 	update();
+}
+
+bool TreemapWidget::isLegendVisible() const
+{
+	return showLegend_;
 }
 
 QSize TreemapWidget::sizeHint() const
@@ -432,6 +437,7 @@ FileNode *TreemapWidget::detectFile(int x, int y)
 
 	if (currentRoot_->empty()) return 0;
 	if (detectRoot_ == 0) return 0;
+	if (y < LEGEND_HEIGHT+LEGEND_MARGIN) return 0;
 
 	while (dNode->getFile() == 0)
 	{

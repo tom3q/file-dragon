@@ -1,3 +1,4 @@
+#include <QSettings>
 #include <cstdio>
 #include "fileframe.h"
 
@@ -18,6 +19,7 @@ FileFrame::FileFrame(QWidget *parent) :
 	layout_->addWidget(lblModDate_, 1, 1);
 	setLayout(layout_);
 
+	flags_ = 0;
 	setFlags(NAME);
 	updateInfo(0);
 }
@@ -72,6 +74,8 @@ void FileFrame::updateInfo(FileNode *file)
 
 void FileFrame::setFlags(int flags)
 {
+	flags_ = flags;
+
 	lblName_->hide();
 	lblSize_->hide();
 	lblModDate_->hide();
@@ -96,4 +100,9 @@ void FileFrame::setFlags(int flags)
 		layout_->addWidget(lblModDate_, row, col);
 		lblModDate_->show();
 	}
+}
+
+int FileFrame::getFlags() const
+{
+	return flags_;
 }
