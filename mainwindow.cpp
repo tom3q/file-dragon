@@ -78,7 +78,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(treeManager, SIGNAL(nowScanning(const QString &)), nowScanningLabel, SLOT(setText(const QString &)));
 
 	// Progress animation
-	progressAnim = new QMovie(":/loading-gif-animation.gif");
+	progressAnim = new QMovie(":/Images/loading-gif-animation.gif");
 	progressAnimLabel = new QLabel();
 	progressAnimLabel->setMovie(progressAnim);
 	progressAnimLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);

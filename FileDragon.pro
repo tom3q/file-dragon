@@ -12,7 +12,6 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     treemapwidget.cpp \
-    abstractnode.cpp \
     directorynode.cpp \
     filenode.cpp \
     filetree.cpp \
@@ -37,6 +36,7 @@ HEADERS  += mainwindow.h \
     filenode.h \
     filetree.h \
     filefilter.h \
+	abstractrenderer.h \
     defaultrenderer.h \
     osoperations.h \
     filterdialog.h \
