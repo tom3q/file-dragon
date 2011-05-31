@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	coloringdialog.cpp
+*	ColoringDialog class implementation.
+*/
+
 #include "coloringdialog.h"
 #include "ui_coloringdialog.h"
 #include "defaultrenderer.h"

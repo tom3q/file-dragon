@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	detectionnode.cpp
+*	DetectionNode class implementation.
+*/
+
 #include "detectionnode.h"
 
 DetectionNode::DetectionNode(QRectF rect, FileNode *file) :

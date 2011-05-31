@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	coloringdialog.h
+*	ColoringDialog class prototype.
+*/
+
 #ifndef COLORINGDIALOG_H
 #define COLORINGDIALOG_H
 

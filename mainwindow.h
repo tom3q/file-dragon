@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	mainwindow.h
+*	MainWindow class prototype.
+*/
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 

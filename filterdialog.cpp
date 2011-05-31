@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	filterdialog.cpp
+*	FilterDialog class implementation.
+*/
+
 #include <QSettings>
 #include "filterdialog.h"
 #include "ui_filterdialog.h"
