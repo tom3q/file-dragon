@@ -1,7 +1,8 @@
 #include "detectionnode.h"
 
 DetectionNode::DetectionNode(QRectF rect, FileNode *file) :
-	rect_(rect), file_(file)
+	rect_(rect),
+	file_(file)
 {
 }
 

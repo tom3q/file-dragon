@@ -1,7 +1,7 @@
 /**
-  * This class contains static methods which act differently
-    depending on the operating system.
-  */
+ * This class contains static methods which act differently
+ * depending on the operating system.
+ */
 
 #include "osoperations.h"
 
@@ -10,9 +10,9 @@ OSOperations::OSOperations()
 }
 
 /**
-  * Returns a list of mounted drives/partitions.
-  * @return QStringList containing paths..
-  */
+ * Returns a list of mounted drives/partitions.
+ * @return QStringList containing paths..
+ */
 
 #if defined(__linux__)
 
@@ -22,34 +22,34 @@ OSOperations::OSOperations()
 
 QStringList OSOperations::diskList()
 {
-    QStringList list;
-    FILE *fptr;
-    char buffer[1024];
-    char dev[1024];
-    char path[1024];
-    char system[1024];
-    char flags[1024];
-    int a, b;
+	QStringList list;
+	FILE *fptr;
+	char buffer[1024];
+	char dev[1024];
+	char path[1024];
+	char system[1024];
+	char flags[1024];
+	int a, b;
 
-    fptr = fopen("/proc/mounts", "r");
-    if (fptr == NULL)
-        return list;
+	fptr = fopen("/proc/mounts", "r");
+	if (fptr == NULL)
+		return list;
 
-    while (fgets(buffer, 1024, fptr))
-    {
-        sscanf(buffer, "%s %s %s %s %d %d",
-               dev, path, system, flags, &a, &b);
+	while (fgets(buffer, 1024, fptr))
+	{
+		sscanf(buffer, "%s %s %s %s %d %d",
+			dev, path, system, flags, &a, &b);
 
-        QString qDev(dev), qPath(path);
-        qPath.replace("\\040", " ");
+		QString qDev(dev), qPath(path);
+		qPath.replace("\\040", " ");
 
-        if (qDev.startsWith("/dev") || qDev == "/")
-        if (qPath != "/dev")
-            list.append(qPath);
-    }
+		if (qDev.startsWith("/dev") || qDev == "/")
+			if (qPath != "/dev")
+				list.append(qPath);
+	}
 
-    fclose(fptr);
-    return list;
+	fclose(fptr);
+	return list;
 }
 
 qint64 OSOperations::getUsedSpace(const QString &disk)

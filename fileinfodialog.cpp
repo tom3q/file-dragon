@@ -3,18 +3,18 @@
 #include "ui_fileinfodialog.h"
 
 FileInfoDialog::FileInfoDialog(QWidget *parent, FileFrame *frame) :
-    QDialog(parent),
-    ui(new Ui::FileInfoDialog)
+	QDialog(parent),
+	ui(new Ui::FileInfoDialog)
 {
 	frame_ = frame;
-    ui->setupUi(this);
+	ui->setupUi(this);
 	loadSettings();
 }
 
 FileInfoDialog::~FileInfoDialog()
 {
 	saveSettings();
-    delete ui;
+	delete ui;
 }
 
 void FileInfoDialog::saveSettings()
@@ -41,14 +41,14 @@ void FileInfoDialog::loadSettings()
 
 void FileInfoDialog::changeEvent(QEvent *e)
 {
-    QDialog::changeEvent(e);
-    switch (e->type()) {
-    case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-        break;
-    default:
-        break;
-    }
+	QDialog::changeEvent(e);
+	switch (e->type()) {
+	case QEvent::LanguageChange:
+		ui->retranslateUi(this);
+		break;
+	default:
+		break;
+	}
 }
 
 void FileInfoDialog::on_pushButton_clicked()

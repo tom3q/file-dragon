@@ -15,16 +15,16 @@
 #include "queuedialog.h"
 
 namespace Ui {
-    class MainWindow;
+	class MainWindow;
 }
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+	explicit MainWindow(QWidget *parent = 0);
+	~MainWindow();
 
 	void saveSettings();
 	void loadSettings();
@@ -35,13 +35,13 @@ signals:
 	void flushQueue();
 
 protected:
-    void changeEvent(QEvent *e);
+	void changeEvent(QEvent *e);
 	void closeEvent(QCloseEvent *event);
 
 private slots:
 	void on_actionFilters_triggered();
 	void on_actionCell_coloring_triggered();
-    void scanClicked();
+	void scanClicked();
 	void scanDone();
 	void cancelClicked();
 	void rootChangedProc(const QString &);
@@ -54,22 +54,22 @@ private slots:
 	void flushDone();
 
 private:
-    void createActions();
-    void createMenus();
-    void fillComboPartition();
+	void createActions();
+	void createMenus();
+	void fillComboPartition();
 
 	Ui::MainWindow *ui;
 	FilterDialog *filterDialog;
 	ColoringDialog *coloringDialog;
 	FileInfoDialog *fileinfoDialog;
 	QueueDialog *queueDialog;
-    TreemapWidget *treemap;
-    QComboBox *comboPartition;
-    QLabel *stretchWidget;
-    QAction *actScan;
-    QAction *actUndo;
-    QAction *actRedo;
-    QAction *actApply;
+	TreemapWidget *treemap;
+	QComboBox *comboPartition;
+	QLabel *stretchWidget;
+	QAction *actScan;
+	QAction *actUndo;
+	QAction *actRedo;
+	QAction *actApply;
 	QAction *actCancel;
 	QAction *actBack;
 	QAction *actDelete;

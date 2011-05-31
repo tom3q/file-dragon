@@ -8,27 +8,27 @@ class FileFilter;
 
 class FileTree : public QObject
 {
-    Q_OBJECT
-//
-public:
-    FileTree();
-    ~FileTree();
+	Q_OBJECT
 
-    void clear();
+public:
+	FileTree();
+	~FileTree();
+
+	void clear();
 	void setFilter(FileFilter &);
 	void filter();
-    bool isEmpty() const;
+	bool isEmpty() const;
 
-    DirectoryNode *getRoot() const;
+	DirectoryNode *getRoot() const;
 
-    void printFiles();
+	void printFiles();
 	void setRootPath(const QString &);
 
 private: 
 	void filterDir(DirectoryNode *);
-    void printFiles(DirectoryNode *);
+	void printFiles(DirectoryNode *);
 
-    DirectoryNode *root_;
+	DirectoryNode *root_;
 	QString rootPath;
 	FileFilter *filter_;
 };

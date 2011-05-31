@@ -2,31 +2,31 @@
 #include "ui_queuedialog.h"
 
 QueueDialog::QueueDialog(QWidget *parent, FileManager *fileManager) :
-    QDialog(parent),
-    ui(new Ui::QueueDialog),
+	QDialog(parent),
+	ui(new Ui::QueueDialog),
 	fileManager_(fileManager)
 {
-    ui->setupUi(this);
+	ui->setupUi(this);
 	listModel_ = new QStringListModel();
 	ui->fileList->setModel(listModel_);
 }
 
 QueueDialog::~QueueDialog()
 {
-    delete ui;
+	delete ui;
 	delete listModel_;
 }
 
 void QueueDialog::changeEvent(QEvent *e)
 {
-    QDialog::changeEvent(e);
-    switch (e->type()) {
-    case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-        break;
-    default:
-        break;
-    }
+	QDialog::changeEvent(e);
+	switch (e->type()) {
+	case QEvent::LanguageChange:
+		ui->retranslateUi(this);
+		break;
+	default:
+		break;
+	}
 }
 
 void QueueDialog::showEvent(QShowEvent *e)

@@ -8,21 +8,21 @@ using namespace std;
 
 TreemapWidget::TreemapWidget(QWidget *parent) :
 #ifdef USE_OPENGL
-	QGLWidget(parent)
+QGLWidget(parent)
 #else
-	QWidget(parent)
+QWidget(parent)
 #endif
 {
 	setAutoFillBackground(true);
 
-    // create file tree and connect signals-slots
-    tree_ = new FileTree();
+	// create file tree and connect signals-slots
+	tree_ = new FileTree();
 	currentRoot_ = tree_->getRoot();
 
 	// detection tree root
 	detectRoot_ = 0;
 
-    // create a cell renderer
+	// create a cell renderer
 	renderer_ = new DefaultRenderer(this);
 
 	// don't show legend
@@ -34,7 +34,7 @@ TreemapWidget::~TreemapWidget()
 	if (detectRoot_)
 		delete detectRoot_;
 	delete renderer_;
-    delete tree_;
+	delete tree_;
 }
 
 void TreemapWidget::setRenderer(DefaultRenderer *cr)
@@ -50,7 +50,7 @@ void TreemapWidget::setRenderer(DefaultRenderer *cr)
 
 FileTree &TreemapWidget::getFileTree() const
 {
-    return *tree_;
+	return *tree_;
 }
 
 int TreemapWidget::getSelectedCount() const
@@ -150,7 +150,7 @@ void TreemapWidget::mouseDoubleClickEvent(QMouseEvent *event)
 
 void TreemapWidget::paintEvent(QPaintEvent *event)
 {
-    QPainter painter(this);
+	QPainter painter(this);
 	QSize size = event->rect().size();
 	QRectF rectangle;
 
@@ -159,7 +159,7 @@ void TreemapWidget::paintEvent(QPaintEvent *event)
 	if (showLegend_ && renderer_->hasLegend())
 	{
 		rectangle.setRect(0, LEGEND_HEIGHT+LEGEND_MARGIN, size.width()-1,
-						  size.height()-1-LEGEND_HEIGHT-LEGEND_MARGIN);
+			size.height()-1-LEGEND_HEIGHT-LEGEND_MARGIN);
 		QRectF legendRect(0, 0, size.width()-1, LEGEND_HEIGHT);
 		renderer_->renderLegend(painter, legendRect);
 	}
@@ -199,7 +199,7 @@ void TreemapWidget::fileTreeUpdated()
 {
 	currentRoot_ = tree_->getRoot();
 	selectedNodes_.clear();
-    update();
+	update();
 
 	emit rootChanged(currentRoot_->getName());
 }

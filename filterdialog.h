@@ -5,22 +5,22 @@
 #include "filetree.h"
 
 namespace Ui {
-    class FilterDialog;
+	class FilterDialog;
 }
 
 class FilterDialog : public QDialog
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
 	explicit FilterDialog(QWidget *parent, FileTree *tree);
-    ~FilterDialog();
+	~FilterDialog();
 
 	void saveSettings();
 	void loadSettings();
 
 protected:
-    void changeEvent(QEvent *e);
+	void changeEvent(QEvent *e);
 
 private slots:
 	void on_checkBox_stateChanged(int );
@@ -29,7 +29,7 @@ private slots:
 	void on_pushButton_2_clicked();
 
 private:
-    Ui::FilterDialog *ui;
+	Ui::FilterDialog *ui;
 	FileTree *tree_;
 };
 

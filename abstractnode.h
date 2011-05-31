@@ -6,7 +6,7 @@
 class AbstractNode
 {
 public:
-    AbstractNode();
+	AbstractNode();
 
 	inline void setParent(AbstractNode *parent)
 	{
@@ -38,9 +38,9 @@ public:
 	virtual bool isDir() const = 0;
 
 private:
-    AbstractNode *parent_;
-    QString name_;
-    qint64 size_;
+	AbstractNode *parent_;
+	QString name_;
+	qint64 size_;
 };
 
 #endif // ABSTRACTNODE_H

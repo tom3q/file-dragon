@@ -10,13 +10,13 @@ using namespace std;
 
 FileTree::FileTree()
 {
-    root_ = new DirectoryNode();
+	root_ = new DirectoryNode();
 	filter_ = new FileFilter();
 }
 
 FileTree::~FileTree()
 {
-    clear();
+	clear();
 	delete root_;
 	delete filter_;
 }
@@ -27,8 +27,8 @@ void FileTree::setRootPath(const QString &path)
 }
 
 /**
-  * Removes all nodes from the tree. Emits treeUpdated() signal.
-  */
+ * Removes all nodes from the tree. Emits treeUpdated() signal.
+ */
 void FileTree::clear()
 {
 	assert(root_ != 0);
@@ -36,9 +36,9 @@ void FileTree::clear()
 }
 
 /**
-  *	Sets a file filter for the file tree. Filtration hides files,
-	which do not match filter criteria. Emits treeUpdated signal.
-  */
+ * Sets a file filter for the file tree. Filtration hides files,
+ * which do not match filter criteria. Emits treeUpdated signal.
+ */
 void FileTree::setFilter(FileFilter &f)
 {
 	*filter_ = f;
@@ -54,39 +54,39 @@ void FileTree::filter()
 }
 
 /**
-  * Filters files in the tree using the given file filter.
-    Unfiltered files are held in DirectoryNodes unfilteredFiles_
-    vector. During the filtration, directory sizes are updated
-    (they don't take "filtered" nodes into account). Emits
-    treeUpdated() signal.
-  * @param currentDir A directory to be filtered.
-  * @param fileFilter Filter object used to filter files.
-  */
+ * Filters files in the tree using the given file filter.
+ * Unfiltered files are held in DirectoryNodes unfilteredFiles_
+ * vector. During the filtration, directory sizes are updated
+ * (they don't take "filtered" nodes into account). Emits
+ * treeUpdated() signal.
+ * @param currentDir A directory to be filtered.
+ * @param fileFilter Filter object used to filter files.
+ */
 void FileTree::filterDir(DirectoryNode *currentDir)
 {
-    DirectoryNode *dir;
-    FileNode *file;
-    double sizeSum = 0;
+	DirectoryNode *dir;
+	FileNode *file;
+	double sizeSum = 0;
 
-    currentDir->unfilteredFiles_.clear();
+	currentDir->unfilteredFiles_.clear();
 
-    for (unsigned int i=0; i<currentDir->files_.size(); i++)
-    {
-        file = currentDir->files_[i];
+	for (unsigned int i=0; i<currentDir->files_.size(); i++)
+	{
+		file = currentDir->files_[i];
 		if (filter_->checkFile(file))
-        {
-            currentDir->unfilteredFiles_.push_back(file);
-            sizeSum += file->getSize();
-        }
-    }
-    for (int i=0; i<currentDir->getDirCount(); i++)
-    {
-        dir = currentDir->getDir(i);
+		{
+			currentDir->unfilteredFiles_.push_back(file);
+			sizeSum += file->getSize();
+		}
+	}
+	for (int i=0; i<currentDir->getDirCount(); i++)
+	{
+		dir = currentDir->getDir(i);
 		filterDir(dir);
-        sizeSum += dir->getSize();
-    }
+		sizeSum += dir->getSize();
+	}
 
-    currentDir->setSize(sizeSum);
+	currentDir->setSize(sizeSum);
 }
 
 bool FileTree::isEmpty() const
@@ -96,21 +96,21 @@ bool FileTree::isEmpty() const
 
 DirectoryNode *FileTree::getRoot() const
 {
-    return root_;
+	return root_;
 }
 
 /**
-  * Prints out files in the tree.
-  */
+ * Prints out files in the tree.
+ */
 void FileTree::printFiles()
 {
-    printFiles(root_);
+	printFiles(root_);
 }
 
 void FileTree::printFiles(DirectoryNode *dir)
 {
-    for (int i=0; i<dir->getFileCount(); i++)
-        cout << dir->getFile(i)->getName().toStdString() << endl;
-    for (int i=0; i<dir->getDirCount(); i++)
-        printFiles(dir->getDir(i));
+	for (int i=0; i<dir->getFileCount(); i++)
+		cout << dir->getFile(i)->getName().toStdString() << endl;
+	for (int i=0; i<dir->getDirCount(); i++)
+		printFiles(dir->getDir(i));
 }

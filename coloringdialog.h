@@ -6,16 +6,16 @@
 #include "treemapwidget.h"
 
 namespace Ui {
-    class ColoringDialog;
+	class ColoringDialog;
 }
 
 class ColoringDialog : public QDialog
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
 	explicit ColoringDialog(QWidget *parent, TreemapWidget *cd);
-    ~ColoringDialog();
+	~ColoringDialog();
 
 	void saveSettings();
 	void loadSettings();
@@ -28,7 +28,7 @@ private slots:
 	void on_pushButton_2_clicked();
 
 private:
-    Ui::ColoringDialog *ui;
+	Ui::ColoringDialog *ui;
 	TreemapWidget *treeWidget_;
 };
 
