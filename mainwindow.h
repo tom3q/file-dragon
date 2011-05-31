@@ -26,6 +26,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+	void saveSettings();
+	void loadSettings();
+
 signals:
 	void buildTree();
 	void refreshTreemap();
@@ -33,6 +36,7 @@ signals:
 
 protected:
     void changeEvent(QEvent *e);
+	void closeEvent(QCloseEvent *event);
 
 private slots:
 	void on_actionFilters_triggered();

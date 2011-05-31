@@ -19,12 +19,14 @@ public:
 
 	void updateInfo(FileNode *file);
 	void setFlags(int flags);
+	int getFlags() const;
 
 private:
 	QLabel *lblName_;
 	QLabel *lblSize_;
 	QLabel *lblModDate_;
 	QGridLayout *layout_;
+	int flags_;
 };
 
 #endif // FileFrame_H

@@ -1,3 +1,4 @@
+#include <QSettings>
 #include "filterdialog.h"
 #include "ui_filterdialog.h"
 #include "filefilter.h"
@@ -8,11 +9,41 @@ FilterDialog::FilterDialog(QWidget *parent, FileTree *tree) :
 {
 	tree_ = tree;
     ui->setupUi(this);
+	loadSettings();
 }
 
 FilterDialog::~FilterDialog()
 {
+	saveSettings();
     delete ui;
+}
+
+void FilterDialog::saveSettings()
+{
+	QSettings settings;
+	settings.setValue("filterdialog/minenabled", ui->checkBox->isChecked());
+	settings.setValue("filterdialog/maxenabled", ui->checkBox_2->isChecked());
+	settings.setValue("filterdialog/minvalue", ui->lineEdit->text());
+	settings.setValue("filterdialog/maxvalue", ui->lineEdit_2->text());
+}
+
+void FilterDialog::loadSettings()
+{
+	QSettings settings;
+	bool minEnabled = settings.value("filterdialog/minenabled", false).toBool();
+	bool maxEnabled = settings.value("filterdialog/maxenabled", false).toBool();
+	QString minValue = settings.value("filterdialog/minvalue", "").toString();
+	QString maxValue = settings.value("filterdialog/maxvalue", "").toString();
+
+	ui->checkBox->setChecked( minEnabled );
+	ui->lineEdit->setEnabled( minEnabled );
+	ui->lineEdit->setText( minValue );
+	ui->checkBox_2->setChecked( maxEnabled );
+	ui->lineEdit_2->setEnabled( maxEnabled );
+	ui->lineEdit_2->setText( maxValue );
+
+	// set a filter for a FileTree
+	on_pushButton_2_clicked();
 }
 
 void FilterDialog::changeEvent(QEvent *e)

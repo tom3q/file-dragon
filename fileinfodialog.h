@@ -17,12 +17,14 @@ public:
 	explicit FileInfoDialog(QWidget *parent, FileFrame *frame);
     ~FileInfoDialog();
 
+	void saveSettings();
+	void loadSettings();
+
 protected:
     void changeEvent(QEvent *e);
 
 private slots:
 	void on_pushButton_clicked();
-
 	void on_pushButton_2_clicked();
 
 private:

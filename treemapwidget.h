@@ -76,7 +76,8 @@ public:
 	  */
 	bool isSelected(FileNode *node) const;
 
-	void setShowLegend(bool show);
+	void setLegendVisible(bool show);
+	bool isLegendVisible() const;
 
 	QSize sizeHint() const;
 

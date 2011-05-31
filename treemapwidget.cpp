@@ -14,7 +14,7 @@ TreemapWidget::TreemapWidget(QWidget *parent) :
 	QWidget(parent)
 #endif
 {
-	setAutoFillBackground(false);
+	setAutoFillBackground(true);
 
     // create file tree and connect signals-slots
     tree_ = new FileTree();
@@ -90,10 +90,15 @@ bool TreemapWidget::isSelected(FileNode *node) const
 	return selectedNodes_.find(node) != selectedNodes_.end();
 }
 
-void TreemapWidget::setShowLegend(bool show)
+void TreemapWidget::setLegendVisible(bool show)
 {
 	showLegend_ = show;
 	update();
+}
+
+bool TreemapWidget::isLegendVisible() const
+{
+	return showLegend_;
 }
 
 QSize TreemapWidget::sizeHint() const
@@ -224,11 +229,11 @@ float TreemapWidget::worstVert(set<AbstractNode*, SortFunc> &l, double &sum, dou
 	float worst = 0, tmp;
 
 	float intermediate = sum*sum*r.width() / (dirSize*r.height());
-	tmp = (float) intermediate/(*l.cbegin())->getSize();
+	tmp = (float) intermediate/(*l.begin())->getSize();
 	if (tmp < 1)
 		tmp = (float) 1.0 / tmp;
 	worst = max<float>(worst, tmp);
-	tmp = (float) intermediate/(*l.crbegin())->getSize();
+	tmp = (float) intermediate/(*l.rbegin())->getSize();
 	if (tmp < 1)
 		tmp = (float) 1.0 / tmp;
 	worst = max<float>(worst, tmp);
@@ -241,11 +246,11 @@ float TreemapWidget::worstHorz(set<AbstractNode*, SortFunc> &l, double &sum, dou
 	float worst = 0, tmp;
 
 	float intermediate = dirSize*r.width()/(sum*sum*r.height());
-	tmp = (float) intermediate*(*l.cbegin())->getSize();
+	tmp = (float) intermediate*(*l.begin())->getSize();
 	if (tmp < 1)
 		tmp = (float) 1.0 / tmp;
 	worst = max<float>(worst, tmp);
-	tmp = (float) intermediate*(*l.crbegin())->getSize();
+	tmp = (float) intermediate*(*l.rbegin())->getSize();
 	if (tmp < 1)
 		tmp = (float) 1.0 / tmp;
 	worst = max<float>(worst, tmp);
@@ -440,6 +445,7 @@ FileNode *TreemapWidget::detectFile(int x, int y)
 
 	if (currentRoot_->empty()) return 0;
 	if (detectRoot_ == 0) return 0;
+	if (y < LEGEND_HEIGHT+LEGEND_MARGIN) return 0;
 
 	while (dNode->getFile() == 0)
 	{

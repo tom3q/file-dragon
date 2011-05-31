@@ -15,6 +15,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+	QCoreApplication::setOrganizationName("Tolga");
+	QCoreApplication::setApplicationName("File Dragon");
+
     // Add menus and other shit...
     createActions();
     createMenus();
@@ -112,6 +115,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(fileManager, SIGNAL(progressUpdated(int)), scanProgress, SLOT(setValue(int)));
 
 	connect(fileManager, SIGNAL(done()), this, SLOT(flushDone()));
+
+	// restore program configuration
+	loadSettings();
 }
 
 /**
@@ -142,6 +148,27 @@ MainWindow::~MainWindow()
     delete comboPartition;
     delete stretchWidget;
 	delete rootPathLabel;
+}
+
+void MainWindow::saveSettings()
+{
+	QSettings settings;
+	settings.setValue("mainwindow/size", size());
+	settings.setValue("mainwindow/pos", pos());
+	settings.setValue("mainwindow/showlegend", ui->actionShow_legend->isChecked());
+}
+
+void MainWindow::loadSettings()
+{
+	QSettings settings;
+	QSize s = settings.value("mainwindow/size", QSize(640, 480)).toSize();
+	QPoint point = settings.value("mainwindow/pos", QPoint(100, 100)).toPoint();
+	bool showLegend = settings.value("mainwindow/showlegend", false).toBool();
+
+	resize(s);
+	move(point);
+	ui->actionShow_legend->setChecked( showLegend );
+	treemap->setLegendVisible( showLegend );
 }
 
 /**
@@ -275,6 +302,11 @@ void MainWindow::changeEvent(QEvent *e)
     }
 }
 
+void MainWindow::closeEvent(QCloseEvent *)
+{
+	saveSettings();
+}
+
 void MainWindow::on_actionFilters_triggered()
 {
 	filterDialog->show();
@@ -287,7 +319,7 @@ void MainWindow::on_actionCell_coloring_triggered()
 
 void MainWindow::on_actionShow_legend_changed()
 {
-	treemap->setShowLegend(ui->actionShow_legend->isChecked());
+	treemap->setLegendVisible(ui->actionShow_legend->isChecked());
 }
 
 void MainWindow::on_actionFile_information_triggered()
