@@ -1,19 +1,21 @@
-/**
- * DirectoryNode holds typical directory information - name, size,
- * its files and subdirs. Files are located in two vector objects:
- * files_ and unfilteredFiles_. First container stores real
- * directory structure. unfilteredFiles_ holds only files which
- * weren't filtered out during the filtration process. From the
- * user side, only unfiltered files are accessible. The filtration
- * process is done by a friend class FileTree.
- */
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	directorynode.cpp
+*	DirectoryNode class implementation.
+*/
 
 #include <cassert>
+#include <algorithm>
 #include "directorynode.h"
+#include "filenode.h"
 
-DirectoryNode::DirectoryNode()
-{
-}
+using namespace std;
 
 DirectoryNode *DirectoryNode::addDir(const QString &name)
 {
@@ -33,20 +35,10 @@ void DirectoryNode::addFile(FileNode *file)
 
 void DirectoryNode::clear()
 {
-	for (unsigned int i=0; i<files_.size(); ++i)
-		delete files_[i];
-
+	for_each(files_.cbegin(), files_.cend(), DeleteIt<FileNode>());
 	files_.clear();
 	unfilteredFiles_.clear();
 
-	for (int i = 0; i < getDirCount(); ++i) {
-		DirectoryNode *d = getDir(i);
-
-		assert(d != 0);
-		d->clear();
-
-		delete d;
-	}
-
+	for_each(dirs_.cbegin(), dirs_.cend(), DeleteIt<DirectoryNode>());
 	dirs_.clear();
 }
