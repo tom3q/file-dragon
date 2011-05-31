@@ -177,27 +177,27 @@ void MainWindow::loadSettings()
 void MainWindow::createActions()
 {
 	actScan = new QAction(QIcon(":/Images/arrow-refresh-icon.png"), tr("Scan"), this);
-    actScan->setStatusTip(tr("Scans a selected partition"));
+	actScan->setToolTip(tr("Scans a selected partition"));
 
 	actUndo = new QAction(QIcon(":/Images/arrow-undo-icon.png"), tr("Undo"), this);
-    actUndo->setStatusTip(tr("Undoes the file operation"));
+	actUndo->setToolTip(tr("Undoes the file operation"));
 
 	actRedo = new QAction(QIcon(":/Images/arrow-redo-icon.png"), tr("Redo"), this);
-    actRedo->setStatusTip(tr("Redoes a file operation"));
+	actRedo->setToolTip(tr("Redoes a file operation"));
 
 	actApply = new QAction(QIcon(":/Images/delete-icon.png"), tr("Apply"), this);
-    actApply->setStatusTip(tr("Executes all file operations"));
+	actApply->setToolTip(tr("Executes all file operations"));
 
 	actCancel = new QAction(QIcon(":/Images/cancel-icon.png"), tr("Cancel"), this);
-	actCancel->setStatusTip(tr("Cancels pending operation"));
+	actCancel->setToolTip(tr("Cancels pending operation"));
 	actCancel->setEnabled(false);
 
 	actBack = new QAction(QIcon(":/Images/magnifier-zoom-out-icon.png"), tr("Back"), this);
-	actBack->setStatusTip(tr("Returns to the parent directory"));
+	actBack->setToolTip(tr("Returns to the parent directory"));
 	actBack->setEnabled(false);
 
 	actDelete = new QAction(QIcon(":/Images/page-delete-icon.png"), tr("Delete"), this);
-	actDelete->setStatusTip(tr("Queues selected files for deletion"));
+	actDelete->setToolTip(tr("Queues selected files for deletion"));
 }
 
 /**
@@ -343,8 +343,12 @@ void MainWindow::applyClicked()
 
 void MainWindow::deleteClicked()
 {
-	fileManager->queueFiles(treemap->getSelectedFiles());
-	treemap->removeSelection();
+	QStringList selected = treemap->getSelectedFiles();
+	if (!selected.empty()) {
+		fileManager->queueFiles(selected);
+		treemap->removeSelection();
+		ui->statusBar->showMessage(tr("Added %1 files to deletion queue.").arg(selected.size()), 3000);
+	}
 }
 
 void MainWindow::queueAccepted()
