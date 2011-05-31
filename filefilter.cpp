@@ -1,10 +1,14 @@
-/**
- * Class used to filter files in a FileTree class. In order to
- * filter files, call FileTree::filter(FileFilter). FileFilter
- * class holds parameters used during filtration (eg. file size)
- * and uses checkFile(FileNode*) method to determine if a given
- * file "passes" the selection or not.
- */
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	filefilter.cpp
+*	FileFilter class implementation.
+*/
 
 #include "filefilter.h"
 
@@ -14,34 +18,29 @@ FileFilter::FileFilter()
 	sizeMax_ = 0;
 }
 
-void FileFilter::setMaximumSize(double s)
+void FileFilter::setMaximumSize(qint64 s)
 {
 	sizeMax_ = s;
 }
 
-double FileFilter::getMaximumSize() const
+qint64 FileFilter::getMaximumSize() const
 {
 	return sizeMax_;
 }
 
-void FileFilter::setMinimumSize(double s)
+void FileFilter::setMinimumSize(qint64 s)
 {
 	sizeMin_ = s;
 }
 
-double FileFilter::getMinimumSize() const
+qint64 FileFilter::getMinimumSize() const
 {
 	return sizeMin_;
 }
 
-/**
- * Checks if a file passes the filtration rules.
- * @param file FileNode pointer.
- * @return True if passes, False if not.
- */
 bool FileFilter::checkFile(FileNode *file)
 {
-	double fileSize = file->getSize();
+	qint64 fileSize = file->getSize();
 
 	if (fileSize < sizeMin_)
 		return false;
