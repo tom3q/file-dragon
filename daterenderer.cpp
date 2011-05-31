@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	daterenderer.cpp
+*	DateRenderer class implementation.
+*/
+
 #include "daterenderer.h"
 #include "treemapwidget.h"
 
@@ -48,9 +60,4 @@ void DateRenderer::renderLegend(QPainter &painter, QRectF &rect)
 
 	painter.setBrush(Qt::transparent);
 	painter.drawRect(gradRect);
-}
-
-bool DateRenderer::hasLegend() const
-{
-	return true;
 }
