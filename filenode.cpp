@@ -27,18 +27,3 @@ void FileNode::setName(const QString &name)
     QFileInfo info(name);
     ext_ = info.completeSuffix();
 }
-
-QString FileNode::getExtension() const
-{
-    return ext_;
-}
-
-void FileNode::setModified(QDateTime time)
-{
-	modified_ = time;
-}
-
-QDateTime FileNode::getModified() const
-{
-	return modified_;
-}
