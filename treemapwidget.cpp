@@ -1,6 +1,5 @@
 #include <QtGui>
 #include <QDebug>
-#include <QTime>
 
 #include "treemapwidget.h"
 #include "directorynode.h"
@@ -445,7 +444,9 @@ FileNode *TreemapWidget::detectFile(int x, int y)
 
 	if (currentRoot_->empty()) return 0;
 	if (detectRoot_ == 0) return 0;
-	if (y < LEGEND_HEIGHT+LEGEND_MARGIN) return 0;
+	if (showLegend_ && renderer_->hasLegend() &&
+		y < LEGEND_HEIGHT+LEGEND_MARGIN)
+		return 0;
 
 	while (dNode->getFile() == 0)
 	{

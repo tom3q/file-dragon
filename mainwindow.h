@@ -44,6 +44,7 @@ private slots:
     void scanClicked();
 	void scanDone();
 	void cancelClicked();
+	void rootChangedProc(const QString &);
 	void fileClicked(FileNode *);
 	void on_actionShow_legend_changed();
 	void on_actionFile_information_triggered();

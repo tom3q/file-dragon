@@ -1,4 +1,3 @@
-#include <QFileInfo>
 #include <QDir>
 #include "filemanager.h"
 

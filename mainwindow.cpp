@@ -102,7 +102,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->statusBar->addWidget(rootPathLabel);
 
 	// Connect treemap to the label to signal path changes
-	connect(treemap, SIGNAL(rootChanged(const QString &)), rootPathLabel, SLOT(setText(const QString &)));
+	connect(treemap, SIGNAL(rootChanged(const QString &)), this, SLOT(rootChangedProc(const QString &)));
 
 	//
 	connect(actDelete, SIGNAL(triggered()), this, SLOT(deleteClicked()));
@@ -176,26 +176,27 @@ void MainWindow::loadSettings()
   */
 void MainWindow::createActions()
 {
-    actScan = new QAction(tr("Scan"), this);
+	actScan = new QAction(QIcon(":/Images/arrow-refresh-icon.png"), tr("Scan"), this);
     actScan->setStatusTip(tr("Scans a selected partition"));
 
-    actUndo = new QAction(tr("Undo"), this);
+	actUndo = new QAction(QIcon(":/Images/arrow-undo-icon.png"), tr("Undo"), this);
     actUndo->setStatusTip(tr("Undoes the file operation"));
 
-    actRedo = new QAction(tr("Redo"), this);
+	actRedo = new QAction(QIcon(":/Images/arrow-redo-icon.png"), tr("Redo"), this);
     actRedo->setStatusTip(tr("Redoes a file operation"));
 
-    actApply = new QAction(tr("Apply"), this);
+	actApply = new QAction(QIcon(":/Images/delete-icon.png"), tr("Apply"), this);
     actApply->setStatusTip(tr("Executes all file operations"));
 
-	actCancel = new QAction(tr("Cancel"), this);
+	actCancel = new QAction(QIcon(":/Images/cancel-icon.png"), tr("Cancel"), this);
 	actCancel->setStatusTip(tr("Cancels pending operation"));
 	actCancel->setEnabled(false);
 
-	actBack = new QAction(tr("Back"), this);
+	actBack = new QAction(QIcon(":/Images/magnifier-zoom-out-icon.png"), tr("Back"), this);
 	actBack->setStatusTip(tr("Returns to the parent directory"));
+	actBack->setEnabled(false);
 
-	actDelete = new QAction(tr("Delete"), this);
+	actDelete = new QAction(QIcon(":/Images/page-delete-icon.png"), tr("Delete"), this);
 	actDelete->setStatusTip(tr("Queues selected files for deletion"));
 }
 
@@ -245,6 +246,7 @@ void MainWindow::scanClicked()
 	actDelete->setEnabled(false);
 	actScan->setEnabled(false);
 	actCancel->setEnabled(true);
+	actBack->setEnabled(false);
 	comboPartition->setEnabled(false);
 	treemap->hide();
 	fileFrame->hide();
@@ -283,6 +285,13 @@ void MainWindow::cancelClicked()
 {
 	treeManager->cancel();
 	fileManager->cancel();
+}
+
+void MainWindow::rootChangedProc(const QString &path)
+{
+	QString rootPath = treemap->getFileTree().getRoot()->getName();
+	actBack->setEnabled( path != rootPath );
+	rootPathLabel->setText(path);
 }
 
 void MainWindow::fileClicked(FileNode *file)

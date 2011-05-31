@@ -1,5 +1,4 @@
 #include <QSettings>
-#include <cstdio>
 #include "fileframe.h"
 
 FileFrame::FileFrame(QWidget *parent) :

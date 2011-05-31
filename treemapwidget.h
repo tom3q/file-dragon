@@ -1,6 +1,10 @@
 #ifndef TREEMAPWIDGET_H
 #define TREEMAPWIDGET_H
 
+#ifdef __linux__
+	#define USE_OPENGL
+#endif
+
 #ifdef USE_OPENGL
 #include <QGLWidget>
 #else
