@@ -1,8 +1,14 @@
-/**
- * AbstractNode is a class from which DirectoryNode and FileNode
- * inherit. This class 2 attributes - size and name - both used
- * by subclasses.
- */
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	abstractnode.cpp
+*	AbstractNode class definition.
+*/
 
 #include "abstractnode.h"
 
