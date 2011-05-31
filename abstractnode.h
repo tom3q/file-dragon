@@ -37,7 +37,7 @@ public:
 	}
 	/**
 	 * Gets node parent.
-	 * @returns Node parent.
+	 * @return Node parent.
 	 */
 	inline AbstractNode *getParent() const
 	{
@@ -54,7 +54,7 @@ public:
 	}
 	/**
 	 * Gets node name.
-	 * @returns Node name.
+	 * @return Node name.
 	 */
 	inline QString getName() const
 	{
@@ -71,7 +71,7 @@ public:
 	}
 	/**
 	 * Gets node size.
-	 * @returns Node size.
+	 * @return Node size.
 	 */
 	inline qint64 getSize() const
 	{
@@ -80,7 +80,7 @@ public:
 
 	/**
 	 * Checks whether the node is a directory.
-	 * @returns True if the node is a directory.
+	 * @return True if the node is a directory.
 	 */
 	virtual bool isDir() const = 0;
 
