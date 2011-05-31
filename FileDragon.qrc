@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>loading-gif-animation.gif</file>
+        <file>Images/arrow-refresh-icon.png</file>
+        <file>Images/arrow-undo-icon.png</file>
+        <file>Images/arrow-redo-icon.png</file>
+        <file>Images/cancel-icon.png</file>
+        <file>Images/bin-closed-icon.png</file>
+        <file>Images/magnifier-zoom-out-icon.png</file>
+        <file>Images/delete-icon.png</file>
+        <file>Images/page-delete-icon.png</file>
+    </qresource>
+</RCC>
