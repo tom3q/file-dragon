@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	detectionnode.h
+*	DetectionNode class prototype.
+*/
+
 #ifndef DETECTIONNODE_H
 #define DETECTIONNODE_H
 

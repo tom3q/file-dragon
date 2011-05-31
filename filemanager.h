@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	filemanager.h
+*	FileManager class prototype.
+*/
+
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 

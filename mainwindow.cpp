@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	mainwindow.cpp
+*	MainWindow class implementation.
+*/
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "treemapwidget.h"

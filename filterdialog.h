@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	filterdialog.h
+*	FilterDialog class prototype.
+*/
+
 #ifndef FILTERDIALOG_H
 #define FILTERDIALOG_H
 

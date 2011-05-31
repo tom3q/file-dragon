@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	filetree.h
+*	FileTree class prototype.
+*/
+
 #ifndef FILETREE_H
 #define FILETREE_H
 

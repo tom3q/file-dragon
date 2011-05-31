@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	filetree.cpp
+*	FileTree class implementation.
+*/
+
 #include <iostream>
 #include <QDir>
 #include <cassert>
