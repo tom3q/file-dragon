@@ -65,22 +65,20 @@ FileNode *TreemapWidget::getSelected(int index)
 	return *it;
 }
 
-const QStringList TreemapWidget::getSelectedFiles() const
+const set<FileNode*> TreemapWidget::getSelectedFiles() const
 {
-	set<FileNode*>::const_iterator it;
-	QStringList files;
-
-	files.reserve(selectedNodes_.size());
-
-	for (it = selectedNodes_.begin(); it != selectedNodes_.end(); ++it)
-		files.push_back((*it)->getName());
-
-	return files;
+	return selectedNodes_;
 }
 
 void TreemapWidget::removeSelection()
 {
 	selectedNodes_.clear();
+	update();
+}
+
+void TreemapWidget::setMarkedFiles(set<FileNode *> s)
+{
+	tree_->setMarkedFiles(s);
 	update();
 }
 

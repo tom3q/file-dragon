@@ -69,9 +69,11 @@ public:
 	*/
 	FileNode *getSelected(int index);
 
-	const QStringList getSelectedFiles() const;
+	const set<FileNode*> getSelectedFiles() const;
 
 	void removeSelection();
+
+	void setMarkedFiles(set<FileNode*> s);
 
 	/**
 	* Checks if user selected a given file.

@@ -4,6 +4,7 @@
 
 #include "filetree.h"
 #include "directorynode.h"
+#include "filenode.h"
 #include "filefilter.h"
 
 using namespace std;
@@ -33,6 +34,7 @@ void FileTree::clear()
 {
 	assert(root_ != 0);
 	root_->clear();
+	markedFiles_.clear();
 }
 
 /**
@@ -97,6 +99,16 @@ bool FileTree::isEmpty() const
 DirectoryNode *FileTree::getRoot() const
 {
 	return root_;
+}
+
+void FileTree::setMarkedFiles(set<FileNode *> &s)
+{
+	set<FileNode *>::iterator it;
+	for (it = markedFiles_.begin(); it != markedFiles_.end(); ++it)
+		(*it)->setMarked(false);
+	for (it = s.begin(); it != s.end(); ++it)
+		(*it)->setMarked(true);
+	markedFiles_ = s;
 }
 
 /**

@@ -13,6 +13,7 @@
 #include "fileframe.h"
 #include "filemanager.h"
 #include "queuedialog.h"
+#include "operationqueue.h"
 
 namespace Ui {
 	class MainWindow;
@@ -52,6 +53,9 @@ private slots:
 	void deleteClicked();
 	void queueAccepted();
 	void flushDone();
+	void undoClicked();
+	void redoClicked();
+	void queueCleared();
 
 private:
 	void createActions();
@@ -85,6 +89,7 @@ private:
 	TreeManager *treeManager;
 	FileTree *tree;
 	FileManager *fileManager;
+	OperationQueue *operationQueue;
 };
 
 #endif // MAINWINDOW_H

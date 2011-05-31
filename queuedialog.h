@@ -21,6 +21,9 @@ protected:
 	void changeEvent(QEvent *e);
 	void showEvent(QShowEvent *e);
 
+signals:
+	void clearSelection();
+
 private slots:
 	void accept();
 	void reject();

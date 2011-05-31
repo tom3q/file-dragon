@@ -23,6 +23,12 @@ void DateRenderer::renderCell(QPainter &painter, QRectF &rect, FileNode *file)
 		painter.setBrush(QColor(r, g, b));
 
 	painter.drawRect(rect);
+
+	if (file->isMarked())
+	{
+		painter.setBrush(Qt::DiagCrossPattern);
+		painter.drawRect(rect);
+	}
 }
 
 void DateRenderer::renderLegend(QPainter &painter, QRectF &rect)

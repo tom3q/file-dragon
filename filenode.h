@@ -16,6 +16,15 @@ public:
 
 	void setName(const QString &);
 
+	inline void setMarked(bool mark)
+	{
+		marked_ = mark;
+	}
+	inline bool isMarked() const
+	{
+		return marked_;
+	}
+
 	inline QString getExtension() const
 	{
 		return ext_;
@@ -36,6 +45,7 @@ public:
 	}
 
 private:
+	bool marked_;
 	QString ext_;
 	QDateTime modified_;
 };

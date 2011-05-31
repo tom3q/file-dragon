@@ -39,7 +39,7 @@ void QueueDialog::showEvent(QShowEvent *e)
 void QueueDialog::on_clearButton_clicked()
 {
 	hide();
-	fileManager_->clear();
+	emit clearSelection();
 }
 
 void QueueDialog::accept()

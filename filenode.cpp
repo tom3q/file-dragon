@@ -5,12 +5,13 @@
 #include <QFileInfo>
 #include "filenode.h"
 
-FileNode::FileNode()
+FileNode::FileNode() :
+	marked_(false), ext_("")
 {
-	ext_ = "";
 }
 
-FileNode::FileNode(const QFileInfo &info)
+FileNode::FileNode(const QFileInfo &info) :
+	marked_(false)
 {
 	AbstractNode::setName(info.absoluteFilePath());
 	setSize(info.size());

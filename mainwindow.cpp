@@ -110,11 +110,18 @@ MainWindow::MainWindow(QWidget *parent) :
 	//
 	connect(queueDialog, SIGNAL(accepted()), this, SLOT(queueAccepted()));
 	connect(this, SIGNAL(flushQueue()), fileManager, SLOT(flush()), Qt::QueuedConnection);
+	connect(queueDialog, SIGNAL(clearSelection()), this, SLOT(queueCleared()));
 
 	connect(fileManager, SIGNAL(nowRemoving(const QString &)), nowScanningLabel, SLOT(setText(const QString &)));
 	connect(fileManager, SIGNAL(progressUpdated(int)), scanProgress, SLOT(setValue(int)));
 
 	connect(fileManager, SIGNAL(done()), this, SLOT(flushDone()));
+
+	connect(actUndo, SIGNAL(triggered()), this, SLOT(undoClicked()));
+	connect(actRedo, SIGNAL(triggered()), this, SLOT(redoClicked()));
+
+	// create operation queue
+	operationQueue = new OperationQueue();
 
 	// restore program configuration
 	loadSettings();
@@ -125,6 +132,7 @@ MainWindow::MainWindow(QWidget *parent) :
  */
 MainWindow::~MainWindow()
 {
+	delete operationQueue;
 	delete fileManager;
 	delete treeManager;
 	delete ui;
@@ -177,27 +185,31 @@ void MainWindow::loadSettings()
 void MainWindow::createActions()
 {
 	actScan = new QAction(QIcon(":/Images/arrow-refresh-icon.png"), tr("Scan"), this);
-	actScan->setToolTip(tr("Scans a selected partition"));
+	actScan->setToolTip(tr("Scan a selected partition"));
 
 	actUndo = new QAction(QIcon(":/Images/arrow-undo-icon.png"), tr("Undo"), this);
-	actUndo->setToolTip(tr("Undoes the file operation"));
+	actUndo->setToolTip(tr("Undoe the file operation"));
+	actUndo->setEnabled(false);
 
 	actRedo = new QAction(QIcon(":/Images/arrow-redo-icon.png"), tr("Redo"), this);
-	actRedo->setToolTip(tr("Redoes a file operation"));
+	actRedo->setToolTip(tr("Redoe a file operation"));
+	actRedo->setEnabled(false);
 
 	actApply = new QAction(QIcon(":/Images/delete-icon.png"), tr("Apply"), this);
-	actApply->setToolTip(tr("Executes all file operations"));
+	actApply->setToolTip(tr("Delete enqueued files"));
+	actApply->setEnabled(false);
 
 	actCancel = new QAction(QIcon(":/Images/cancel-icon.png"), tr("Cancel"), this);
-	actCancel->setToolTip(tr("Cancels pending operation"));
+	actCancel->setToolTip(tr("Cancel pending operation"));
 	actCancel->setEnabled(false);
 
 	actBack = new QAction(QIcon(":/Images/magnifier-zoom-out-icon.png"), tr("Back"), this);
-	actBack->setToolTip(tr("Returns to the parent directory"));
+	actBack->setToolTip(tr("Return to the parent directory"));
 	actBack->setEnabled(false);
 
 	actDelete = new QAction(QIcon(":/Images/page-delete-icon.png"), tr("Delete"), this);
-	actDelete->setToolTip(tr("Queues selected files for deletion"));
+	actDelete->setToolTip(tr("Queue selected files for deletion"));
+	actDelete->setEnabled(false);
 }
 
 /**
@@ -242,11 +254,14 @@ void MainWindow::fillComboPartition()
 void MainWindow::scanClicked()
 {
 	fileFrame->updateInfo(0);
+	operationQueue->clear();
 	actApply->setEnabled(false);
 	actDelete->setEnabled(false);
 	actScan->setEnabled(false);
 	actCancel->setEnabled(true);
 	actBack->setEnabled(false);
+	actUndo->setEnabled(false);
+	actRedo->setEnabled(false);
 	comboPartition->setEnabled(false);
 	treemap->hide();
 	fileFrame->hide();
@@ -277,8 +292,6 @@ void MainWindow::scanDone()
 	comboPartition->setEnabled(true);
 	actScan->setEnabled(true);
 	actCancel->setEnabled(false);
-	actApply->setEnabled(true);
-	actDelete->setEnabled(true);
 }
 
 void MainWindow::cancelClicked()
@@ -297,6 +310,7 @@ void MainWindow::rootChangedProc(const QString &path)
 void MainWindow::fileClicked(FileNode *file)
 {
 	fileFrame->updateInfo(file);
+	actDelete->setEnabled( treemap->getSelectedCount() != 0 );
 }
 
 void MainWindow::changeEvent(QEvent *e)
@@ -338,24 +352,40 @@ void MainWindow::on_actionFile_information_triggered()
 
 void MainWindow::applyClicked()
 {
+	fileManager->clear();
+	fileManager->queueFiles( operationQueue->getMarkedFilenames() );
 	queueDialog->show();
 }
 
 void MainWindow::deleteClicked()
 {
-	QStringList selected = treemap->getSelectedFiles();
-	if (!selected.empty()) {
-		fileManager->queueFiles(selected);
-		treemap->removeSelection();
-		ui->statusBar->showMessage(tr("Added %1 files to deletion queue.").arg(selected.size()), 3000);
+	if (treemap->getSelectedCount())
+	{
+		int count = operationQueue->addDeleteOperation( treemap->getSelectedFiles() );
+		if (count)
+		{
+			ui->statusBar->showMessage(tr("Added %1 files to deletion queue.").arg(count), 3000);
+
+			treemap->removeSelection();
+			treemap->setMarkedFiles( operationQueue->getMarkedFiles() );
+			actUndo->setEnabled(true);
+			actRedo->setEnabled(false);
+			actApply->setEnabled(true);
+		}
 	}
+	actDelete->setEnabled(false);
 }
 
 void MainWindow::queueAccepted()
 {
 	fileFrame->updateInfo(0);
+	operationQueue->clear();
+	treemap->setMarkedFiles( operationQueue->getMarkedFiles() );
+
 	actApply->setEnabled(false);
 	actDelete->setEnabled(false);
+	actUndo->setEnabled(false);
+	actRedo->setEnabled(false);
 	actScan->setEnabled(false);
 	actCancel->setEnabled(true);
 	comboPartition->setEnabled(false);
@@ -374,6 +404,39 @@ void MainWindow::queueAccepted()
 void MainWindow::flushDone()
 {
 	rootPathLabel->setText(tr("Scanning..."));
-
 	emit buildTree();
+}
+
+void MainWindow::undoClicked()
+{
+	int count = operationQueue->undo();
+	if (count)
+		ui->statusBar->showMessage(tr("Removed %1 files from deletion queue.").arg(count), 3000);
+
+	actUndo->setEnabled( operationQueue->canUndo() );
+	actRedo->setEnabled( operationQueue->canRedo() );
+	actApply->setEnabled( !operationQueue->empty() );
+	treemap->setMarkedFiles( operationQueue->getMarkedFiles() );
+}
+
+void MainWindow::redoClicked()
+{
+	int count = operationQueue->redo();
+	if (count)
+		ui->statusBar->showMessage(tr("Returned %1 files to deletion queue.").arg(count), 3000);
+
+	actUndo->setEnabled( operationQueue->canUndo() );
+	actRedo->setEnabled( operationQueue->canRedo() );
+	actApply->setEnabled( !operationQueue->empty() );
+	treemap->setMarkedFiles( operationQueue->getMarkedFiles() );
+}
+
+void MainWindow::queueCleared()
+{
+	fileManager->clear();
+	operationQueue->clear();
+	treemap->setMarkedFiles( operationQueue->getMarkedFiles() );
+	actUndo->setEnabled( false );
+	actRedo->setEnabled( false );
+	actApply->setEnabled( false );
 }

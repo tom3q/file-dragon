@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     fileframe.cpp \
     detectionnode.cpp \
 	filemanager.cpp \
-	queuedialog.cpp
+	queuedialog.cpp \
+    operationqueue.cpp
 
 HEADERS  += mainwindow.h \
     treemapwidget.h \
@@ -47,7 +48,8 @@ HEADERS  += mainwindow.h \
     fileframe.h \
     detectionnode.h \
 	filemanager.h \
-	queuedialog.h
+	queuedialog.h \
+    operationqueue.h
 
 FORMS    += mainwindow.ui \
     filterdialog.ui \
