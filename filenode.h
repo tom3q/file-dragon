@@ -15,12 +15,25 @@ public:
 	FileNode(const QFileInfo &info);
 
     void setName(const QString &);
-    QString getExtension() const;
 
-	void setModified(QDateTime);
-	QDateTime getModified() const;
+	inline QString getExtension() const
+	{
+		return ext_;
+	}
+	
+	inline void setModified(QDateTime time)
+	{
+		modified_ = time;
+	}
+	inline QDateTime getModified() const
+	{
+		return modified_;
+	}
 
-	bool isDir() {return false;}
+	inline bool isDir() const
+	{
+		return false;
+	}
 
 private:
     QString ext_;

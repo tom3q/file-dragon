@@ -45,7 +45,10 @@ public:
 		return files_.empty() && dirs_.empty();
 	}
 
-	bool isDir() {return true;}
+	inline bool isDir() const
+	{
+		return true;
+	}
 
 private:
     friend class FileTree;
