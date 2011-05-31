@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	treemapwidget.cpp
+*	TreemapWidget class definition.
+*/
+
 #include <QtGui>
 #include <QDebug>
 
