@@ -1,7 +1,11 @@
 #ifndef TREEMAPWIDGET_H
 #define TREEMAPWIDGET_H
 
+#ifdef USE_OPENGL
 #include <QGLWidget>
+#else
+#include <QWidget>
+#endif
 #include <QPainter>
 #include <QRect>
 #include <set>
@@ -12,7 +16,11 @@
 
 using namespace std;
 
+#ifdef USE_OPENGL
 class TreemapWidget : public QGLWidget
+#else
+class TreemapWidget : public QWidget
+#endif
 {
     Q_OBJECT
 public:

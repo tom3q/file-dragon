@@ -8,7 +8,11 @@
 using namespace std;
 
 TreemapWidget::TreemapWidget(QWidget *parent) :
+#ifdef USE_OPENGL
 	QGLWidget(parent)
+#else
+	QWidget(parent)
+#endif
 {
 	setAutoFillBackground(false);
 
