@@ -17,8 +17,8 @@
 
 /**
  * AbstractNode is a class from which DirectoryNode and FileNode
- * inherit. This class 2 attributes - size and name - both used
- * by subclasses.
+ * inherit. This class contains 3 attributes, which can be used by
+ * subclasses - size, name, parent.
  */
 class AbstractNode
 {
@@ -26,7 +26,8 @@ public:
 	/**
 	 * Default constructor
 	 */
-	AbstractNode();
+	AbstractNode() : parent_(0), size_(0) {};
+
 	/**
 	 * Sets node parent.
 	 * @param parent New parent for node.
