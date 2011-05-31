@@ -1,14 +1,17 @@
-/**
- * Holds file-related information.
- */
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	filenode.cpp
+*	FileNode class implementation.
+*/
 
 #include <QFileInfo>
 #include "filenode.h"
-
-FileNode::FileNode()
-{
-	ext_ = "";
-}
 
 FileNode::FileNode(const QFileInfo &info)
 {
