@@ -6,19 +6,19 @@
 #include <QStringListModel>
 
 namespace Ui {
-    class QueueDialog;
+	class QueueDialog;
 }
 
 class QueueDialog : public QDialog
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
 	explicit QueueDialog(QWidget *parent, FileManager *fileManager);
-    ~QueueDialog();
+	~QueueDialog();
 
 protected:
-    void changeEvent(QEvent *e);
+	void changeEvent(QEvent *e);
 	void showEvent(QShowEvent *e);
 
 private slots:
@@ -27,7 +27,7 @@ private slots:
 	void on_clearButton_clicked();
 
 private:
-    Ui::QueueDialog *ui;
+	Ui::QueueDialog *ui;
 	QStringListModel *listModel_;
 	FileManager *fileManager_;
 };

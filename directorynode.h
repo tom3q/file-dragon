@@ -12,34 +12,29 @@ using namespace std;
 class DirectoryNode : public AbstractNode
 {
 public:
-    DirectoryNode();
+	DirectoryNode();
 
 	DirectoryNode *addDir(const QString &);
-
 	inline DirectoryNode *getDir(int index) const
 	{
-	    return dirs_[index];
+		return dirs_[index];
 	}
-
 	inline int getDirCount() const
 	{
 		return dirs_.size();
 	}
 
 	void addFile(FileNode *);
-
 	inline FileNode *getFile(int index) const
 	{
 		return unfilteredFiles_[index];
 	}
-
 	inline int getFileCount() const
 	{
 		return unfilteredFiles_.size();
 	}
 
 	void clear();
-
 	inline bool empty() const
 	{
 		return files_.empty() && dirs_.empty();
@@ -51,11 +46,11 @@ public:
 	}
 
 private:
-    friend class FileTree;
+	friend class FileTree;
 
-    vector<DirectoryNode*> dirs_;
-    vector<FileNode*> files_;
-    vector<FileNode*> unfilteredFiles_;
+	vector<DirectoryNode*> dirs_;
+	vector<FileNode*> files_;
+	vector<FileNode*> unfilteredFiles_;
 };
 
 #endif // DIRECTORYNODE_H

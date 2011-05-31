@@ -33,15 +33,15 @@ void DateRenderer::renderLegend(QPainter &painter, QRectF &rect)
 
 	// labels
 	painter.drawText(QRectF(0, 0, TEXT_WIDTH, rect.height()),
-					 Qt::AlignRight | Qt::AlignVCenter, "Old file");
+		Qt::AlignRight | Qt::AlignVCenter, "Old file");
 	painter.drawText(QRectF(rect.width()-TEXT_WIDTH, 0, TEXT_WIDTH, rect.height()),
-					 Qt::AlignLeft | Qt::AlignVCenter, "New file");
+		Qt::AlignLeft | Qt::AlignVCenter, "New file");
 
 	// gradient
 	QLinearGradient grad(TEXT_WIDTH+MARGIN, rect.height()/2,
-						 rect.width()-TEXT_WIDTH-MARGIN, rect.height()/2);
+		rect.width()-TEXT_WIDTH-MARGIN, rect.height()/2);
 	QRectF gradRect(TEXT_WIDTH+MARGIN, MARGIN, rect.width()-2*(TEXT_WIDTH+MARGIN),
-					rect.height()-2*MARGIN);
+		rect.height()-2*MARGIN);
 	grad.setColorAt(0, QColor(OLD_R, OLD_G, OLD_B));
 	grad.setColorAt(1, QColor(NEW_R, NEW_G, NEW_B));
 	painter.fillRect(gradRect, grad);

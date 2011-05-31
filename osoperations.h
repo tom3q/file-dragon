@@ -6,9 +6,9 @@
 class OSOperations
 {
 public:
-    OSOperations();
+	OSOperations();
 
-    static QStringList diskList();
+	static QStringList diskList();
 	static qint64 getUsedSpace(const QString &);
 };
 

@@ -15,10 +15,10 @@ public:
 	~FileManager();
 
 	const QStringList getQueuedFiles() const;
-	
+
 	/**
-	 *	Cancels pending operation.
-	 */
+	*	Cancels pending operation.
+	*/
 	inline void cancel()
 	{
 		shouldCancel_ = true;

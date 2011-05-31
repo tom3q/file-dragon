@@ -5,17 +5,17 @@
 
 FilterDialog::FilterDialog(QWidget *parent, FileTree *tree) :
 	QDialog(parent),
-    ui(new Ui::FilterDialog)
+	ui(new Ui::FilterDialog)
 {
 	tree_ = tree;
-    ui->setupUi(this);
+	ui->setupUi(this);
 	loadSettings();
 }
 
 FilterDialog::~FilterDialog()
 {
 	saveSettings();
-    delete ui;
+	delete ui;
 }
 
 void FilterDialog::saveSettings()
@@ -48,44 +48,44 @@ void FilterDialog::loadSettings()
 
 void FilterDialog::changeEvent(QEvent *e)
 {
-    QDialog::changeEvent(e);
-    switch (e->type()) {
-    case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-        break;
-    default:
-        break;
-    }
+	QDialog::changeEvent(e);
+	switch (e->type()) {
+	case QEvent::LanguageChange:
+		ui->retranslateUi(this);
+		break;
+	default:
+		break;
+	}
 }
 
 /**
-  * Called when state of 'minimum size' checkbox is changed.
-  */
+ * Called when state of 'minimum size' checkbox is changed.
+ */
 void FilterDialog::on_checkBox_stateChanged(int )
 {
 	ui->lineEdit->setEnabled( ui->checkBox->isChecked() );
 }
 
 /**
-  * Called when state of 'maximum size' checkbox is changed.
-  */
+ * Called when state of 'maximum size' checkbox is changed.
+ */
 void FilterDialog::on_checkBox_2_stateChanged(int )
 {
 	ui->lineEdit_2->setEnabled( ui->checkBox_2->isChecked() );
 }
 
 /**
-  * 'Cancel' button clicked. Hides the window.
-  */
+ * 'Cancel' button clicked. Hides the window.
+ */
 void FilterDialog::on_pushButton_clicked()
 {
 	hide();
 }
 
 /**
-  * 'OK' button clicked. Creates a FileFilter based on the
-	options defined by user. Applies the new filter to FileTree.
-  */
+ * 'OK' button clicked. Creates a FileFilter based on the
+ * options defined by user. Applies the new filter to FileTree.
+ */
 void FilterDialog::on_pushButton_2_clicked()
 {
 	FileFilter filter;

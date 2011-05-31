@@ -5,18 +5,18 @@
 #include <cassert>
 
 ColoringDialog::ColoringDialog(QWidget *parent, TreemapWidget *cd) :
-    QDialog(parent),
-    ui(new Ui::ColoringDialog)
+	QDialog(parent),
+	ui(new Ui::ColoringDialog)
 {
 	treeWidget_ = cd;
-    ui->setupUi(this);
+	ui->setupUi(this);
 	loadSettings();
 }
 
 ColoringDialog::~ColoringDialog()
 {
 	saveSettings();
-    delete ui;
+	delete ui;
 }
 
 void ColoringDialog::saveSettings()
@@ -45,14 +45,14 @@ void ColoringDialog::loadSettings()
 
 void ColoringDialog::changeEvent(QEvent *e)
 {
-    QDialog::changeEvent(e);
-    switch (e->type()) {
-    case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-        break;
-    default:
-        break;
-    }
+	QDialog::changeEvent(e);
+	switch (e->type()) {
+	case QEvent::LanguageChange:
+		ui->retranslateUi(this);
+		break;
+	default:
+		break;
+	}
 }
 
 void ColoringDialog::on_pushButton_clicked()

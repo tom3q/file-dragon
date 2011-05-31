@@ -11,16 +11,16 @@
 class FileNode : public AbstractNode
 {
 public:
-    FileNode();
+	FileNode();
 	FileNode(const QFileInfo &info);
 
-    void setName(const QString &);
+	void setName(const QString &);
 
 	inline QString getExtension() const
 	{
 		return ext_;
 	}
-	
+
 	inline void setModified(QDateTime time)
 	{
 		modified_ = time;
@@ -36,7 +36,7 @@ public:
 	}
 
 private:
-    QString ext_;
+	QString ext_;
 	QDateTime modified_;
 };
 

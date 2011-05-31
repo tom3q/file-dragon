@@ -7,32 +7,32 @@
 #include "filemanager.h"
 
 /**
-  * Main window constructor.
-  */
+ * Main window constructor.
+ */
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+	QMainWindow(parent),
+	ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+	ui->setupUi(this);
 
 	QCoreApplication::setOrganizationName("Tolga");
 	QCoreApplication::setApplicationName("File Dragon");
 
-    // Add menus and other shit...
-    createActions();
-    createMenus();
+	// Add menus and other shit...
+	createActions();
+	createMenus();
 
-    // Add a TreemapWidget to a form
-    treemap = new TreemapWidget(this);
+	// Add a TreemapWidget to a form
+	treemap = new TreemapWidget(this);
 	ui->verticalLayout->addWidget(treemap);
-    treemap->show();
+	treemap->show();
 	connect(treemap, SIGNAL(fileSelected(FileNode*)), this, SLOT(fileClicked(FileNode*)));
 
 	// Frame containing file information
 	fileFrame = new FileFrame(this);
 	ui->verticalLayout->addWidget(fileFrame);
 	fileFrame->show();
-    
+
 	// Create a filter dialog
 	filterDialog = new FilterDialog(this, &treemap->getFileTree());
 
@@ -57,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Create event chain for scan callback
 	connect(treeManager, SIGNAL(treeUpdated()), this, SLOT(scanDone()));
 	connect(this, SIGNAL(refreshTreemap()), treemap, SLOT(fileTreeUpdated()));
-	
+
 	// Connect partition combo box directly with tree manager
 	connect(comboPartition, SIGNAL(currentIndexChanged(const QString &)), treeManager, SLOT(setRootPath(const QString &)), Qt::QueuedConnection);
 
@@ -121,32 +121,32 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 /**
-  * Destructor
-  */
+ * Destructor
+ */
 MainWindow::~MainWindow()
 {
 	delete fileManager;
 	delete treeManager;
-    delete ui;
+	delete ui;
 
 	delete filterDialog;
 	delete fileinfoDialog;
 	delete coloringDialog;
-	
+
 	delete progressBar;
 	delete progressAnim;
 
 	delete treemap;
 	delete fileFrame;
-    delete actScan;
-    delete actUndo;
-    delete actRedo;
-    delete actApply;
+	delete actScan;
+	delete actUndo;
+	delete actRedo;
+	delete actApply;
 	delete actCancel;
 	delete actBack;
 	delete actDelete;
-    delete comboPartition;
-    delete stretchWidget;
+	delete comboPartition;
+	delete stretchWidget;
 	delete rootPathLabel;
 }
 
@@ -172,8 +172,8 @@ void MainWindow::loadSettings()
 }
 
 /**
-  * Creates menu/toolbar actions, which will be used in the application.
-  */
+ * Creates menu/toolbar actions, which will be used in the application.
+ */
 void MainWindow::createActions()
 {
 	actScan = new QAction(QIcon(":/Images/arrow-refresh-icon.png"), tr("Scan"), this);
@@ -201,44 +201,44 @@ void MainWindow::createActions()
 }
 
 /**
-  * Adds separators/actions to menus and toolbar.
-  */
+ * Adds separators/actions to menus and toolbar.
+ */
 void MainWindow::createMenus()
 {
-    ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addAction(actScan);
+	ui->mainToolBar->addSeparator();
+	ui->mainToolBar->addAction(actScan);
 	ui->mainToolBar->addAction(actCancel);
-    ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addAction(actUndo);
-    ui->mainToolBar->addAction(actRedo);
-    ui->mainToolBar->addSeparator();
+	ui->mainToolBar->addSeparator();
+	ui->mainToolBar->addAction(actUndo);
+	ui->mainToolBar->addAction(actRedo);
+	ui->mainToolBar->addSeparator();
 	ui->mainToolBar->addAction(actDelete);
-    ui->mainToolBar->addAction(actApply);
+	ui->mainToolBar->addAction(actApply);
 	ui->mainToolBar->addSeparator();
 	ui->mainToolBar->addAction(actBack);
 
-    stretchWidget = new QLabel(this);
-    stretchWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    ui->mainToolBar->addWidget(stretchWidget);
-    stretchWidget->show();
+	stretchWidget = new QLabel(this);
+	stretchWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+	ui->mainToolBar->addWidget(stretchWidget);
+	stretchWidget->show();
 
-    comboPartition = new QComboBox(this);
-    ui->mainToolBar->addWidget(comboPartition);
-    comboPartition->show();
+	comboPartition = new QComboBox(this);
+	ui->mainToolBar->addWidget(comboPartition);
+	comboPartition->show();
 }
 
 void MainWindow::fillComboPartition()
 {
-    QStringList list = OSOperations::diskList();
+	QStringList list = OSOperations::diskList();
 
-    comboPartition->clear();
-    for (int i=0; i<list.size(); i++)
-        comboPartition->addItem(list.at(i));
+	comboPartition->clear();
+	for (int i=0; i<list.size(); i++)
+		comboPartition->addItem(list.at(i));
 }
 
 /**
-  * Called when user clicks "Scan" toolbar button.
-  */
+ * Called when user clicks "Scan" toolbar button.
+ */
 void MainWindow::scanClicked()
 {
 	fileFrame->updateInfo(0);
@@ -257,11 +257,11 @@ void MainWindow::scanClicked()
 	progressAnim->start();
 	progressBar->show();
 
-    emit buildTree();
+	emit buildTree();
 }
 
 /**
- *	Called when the tree gets built.
+ * Called when the tree gets built.
  */
 void MainWindow::scanDone()
 {
@@ -301,14 +301,14 @@ void MainWindow::fileClicked(FileNode *file)
 
 void MainWindow::changeEvent(QEvent *e)
 {
-    QMainWindow::changeEvent(e);
-    switch (e->type()) {
-    case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-        break;
-    default:
-        break;
-    }
+	QMainWindow::changeEvent(e);
+	switch (e->type()) {
+	case QEvent::LanguageChange:
+		ui->retranslateUi(this);
+		break;
+	default:
+		break;
+	}
 }
 
 void MainWindow::closeEvent(QCloseEvent *)
@@ -368,7 +368,7 @@ void MainWindow::queueAccepted()
 	progressAnim->start();
 	progressBar->show();
 
-    emit flushQueue();
+	emit flushQueue();
 }
 
 void MainWindow::flushDone()

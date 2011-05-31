@@ -36,10 +36,10 @@ void TreeManager::clear()
 }
 
 /**
-  * Constructs a directory tree, beginning with a directory specified by path.
-    Emits treeUpdated() signal.
-  * @param path Root directory for the tree.
-  */
+ * Constructs a directory tree, beginning with a directory specified by path.
+ * Emits treeUpdated() signal.
+ * @param path Root directory for the tree.
+ */
 void TreeManager::buildTree()
 {
 	shouldCancel = false;
@@ -64,16 +64,16 @@ void TreeManager::buildTree()
 }
 
 /**
-  * Creates a directory node together with all its file
-    and directory nodes. Used in "buildTree" method.
-  */
+ * Creates a directory node together with all its file
+ * and directory nodes. Used in "buildTree" method.
+ */
 void TreeManager::scanDir(DirectoryNode *dir)
 {
 	QString path(dir->getName());
-    QDir currentDir(path);
-    double sizeSum = 0;
+	QDir currentDir(path);
+	double sizeSum = 0;
 
-    currentDir.setFilter( QDir::Files | QDir::NoSymLinks );
+	currentDir.setFilter( QDir::Files | QDir::NoSymLinks );
 	{
 		const QFileInfoList entries = currentDir.entryInfoList();
 		for (int i = 0; i < entries.size(); ++i)
@@ -93,10 +93,10 @@ void TreeManager::scanDir(DirectoryNode *dir)
 		}
 	}
 
-    QFileInfo currentInfo;
-    currentInfo.setFile(path);
+	QFileInfo currentInfo;
+	currentInfo.setFile(path);
 
-    currentDir.setFilter( QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks );
+	currentDir.setFilter( QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks );
 	{
 		const QFileInfoList dirEntries = currentDir.entryInfoList();
 		for (int i = 0; i < dirEntries.size(); ++i)
@@ -115,13 +115,13 @@ void TreeManager::scanDir(DirectoryNode *dir)
 		DirectoryNode *d = dir->getDir(i);
 		emit nowScanning(d->getName());
 		scanDir(d);
-        sizeSum += d->getSize();
+		sizeSum += d->getSize();
 
 		if (shouldCancel)
 			return;
 	}
 
-    dir->setSize(sizeSum);
+	dir->setSize(sizeSum);
 }
 
 void TreeManager::setRootPath(const QString &path)
