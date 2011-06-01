@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	fileframe.h
+*	FileFrame class prototype.
+*/
+
 #ifndef FileFrame_H
 #define FileFrame_H
 

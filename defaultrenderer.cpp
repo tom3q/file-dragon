@@ -26,9 +26,6 @@ void DefaultRenderer::renderCell(QPainter &painter, QRectF &rect, FileNode *file
 	else
 		painter.setBrush(QColor(COLOR_R, COLOR_G, COLOR_B));
 
-	if (file->isMarked())
-		painter.setBrush(QColor(0, 0, 0));
-
 	painter.drawRect(rect);
 
 	if (file->isMarked())

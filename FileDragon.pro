@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     detectionnode.cpp \
 	filemanager.cpp \
 	queuedialog.cpp \
-    operationqueue.cpp
+    operationqueue.cpp \
+    aboutdialog.cpp
 
 HEADERS  += mainwindow.h \
     treemapwidget.h \
@@ -49,12 +50,14 @@ HEADERS  += mainwindow.h \
     detectionnode.h \
 	filemanager.h \
 	queuedialog.h \
-    operationqueue.h
+    operationqueue.h \
+    aboutdialog.h
 
 FORMS    += mainwindow.ui \
     filterdialog.ui \
     coloringdialog.ui \
     fileinfodialog.ui \
-	queuedialog.ui
+	queuedialog.ui \
+    aboutdialog.ui
 
 RESOURCES	+= FileDragon.qrc

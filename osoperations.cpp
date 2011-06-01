@@ -1,18 +1,16 @@
-/**
- * This class contains static methods which act differently
- * depending on the operating system.
- */
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	osoperations.cpp
+*	OSOperations class implementation.
+*/
 
 #include "osoperations.h"
-
-OSOperations::OSOperations()
-{
-}
-
-/**
- * Returns a list of mounted drives/partitions.
- * @return QStringList containing paths..
- */
 
 #if defined(__linux__)
 
