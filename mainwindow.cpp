@@ -54,7 +54,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Create file info dialog
 	fileinfoDialog = new FileInfoDialog(this, fileFrame);
 
-	// About dialog
 	aboutDialog = new AboutDialog();
 
 	// Create tree manager thread

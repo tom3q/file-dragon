@@ -19,13 +19,13 @@
 #include "filterdialog.h"
 #include "coloringdialog.h"
 #include "fileinfodialog.h"
+#include "aboutdialog.h"
 #include "treemapwidget.h"
 #include "filetree.h"
 #include "treemanager.h"
 #include "fileframe.h"
 #include "filemanager.h"
 #include "queuedialog.h"
-#include "aboutdialog.h"
 #include "operationqueue.h"
 
 namespace Ui {
