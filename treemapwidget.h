@@ -170,11 +170,11 @@ private:
 		}
 	};
 
-	void drawVert(QPainter &painter, QRectF &rect, set<AbstractNode *, SortFunc> &children, DetectionNode *node);
-	void drawHorz(QPainter &painter, QRectF &rect, set<AbstractNode *, SortFunc> &children, DetectionNode *node);
-	float worstHorz(set<AbstractNode*, SortFunc> &l, double &sum, double &dirSize, QRectF &r);
-	float worstVert(set<AbstractNode*, SortFunc> &l, double &sum, double &dirSize, QRectF &r);
-	float listSum(set<AbstractNode*, SortFunc> &l);
+	void drawVert(QPainter &painter, QRectF &rect, multiset<AbstractNode *, SortFunc> &children, DetectionNode *node);
+	void drawHorz(QPainter &painter, QRectF &rect, multiset<AbstractNode *, SortFunc> &children, DetectionNode *node);
+	float worstHorz(multiset<AbstractNode *, SortFunc> &l, double &sum, double &dirSize, QRectF &r);
+	float worstVert(multiset<AbstractNode *, SortFunc> &l, double &sum, double &dirSize, QRectF &r);
+	float listSum(multiset<AbstractNode *, SortFunc> &l);
 
 	FileNode *detectFile(int x, int y);
 	DirectoryNode *detectDirectory(int x, int y);
