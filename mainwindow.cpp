@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	mainwindow.cpp
+*	MainWindow class implementation.
+*/
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "treemapwidget.h"
@@ -42,6 +54,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Create file info dialog
 	fileinfoDialog = new FileInfoDialog(this, fileFrame);
 
+	// About dialog
+	aboutDialog = new AboutDialog();
+
 	// Create tree manager thread
 	treeManager = new TreeManager(treemap->getFileTree());
 
@@ -63,6 +78,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Connect cancel action to its handler
 	connect(actCancel, SIGNAL(triggered()), this, SLOT(cancelClicked()));
+
+	connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
 
 	// Fill partition list (also sends currentIndexChanges signal to treeManager)
 	fillComboPartition();
@@ -140,6 +157,7 @@ MainWindow::~MainWindow()
 	delete filterDialog;
 	delete fileinfoDialog;
 	delete coloringDialog;
+	delete aboutDialog;
 
 	delete progressBar;
 	delete progressAnim;
@@ -439,4 +457,9 @@ void MainWindow::queueCleared()
 	actUndo->setEnabled( false );
 	actRedo->setEnabled( false );
 	actApply->setEnabled( false );
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+	aboutDialog->show();
 }

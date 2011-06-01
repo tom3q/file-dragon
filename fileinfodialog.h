@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	fileinfodialog.h
+*	FileInfoDialog class prototype.
+*/
+
 #ifndef FILEINFODIALOG_H
 #define FILEINFODIALOG_H
 

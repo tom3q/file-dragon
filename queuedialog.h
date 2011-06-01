@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	queuedialog.h
+*	QueueDialog class prototype.
+*/
+
 #ifndef QUEUEDIALOG_H
 #define QUEUEDIALOG_H
 

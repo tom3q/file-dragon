@@ -1,3 +1,15 @@
+/*
+*	FILE DRAGON
+*	A disk space management utility.
+*
+*	Developed by:
+*	-> Tomasz Figa
+*	-> Piotr T¹kiel
+*
+*	mainwindow.h
+*	MainWindow class prototype.
+*/
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -13,6 +25,7 @@
 #include "fileframe.h"
 #include "filemanager.h"
 #include "queuedialog.h"
+#include "aboutdialog.h"
 #include "operationqueue.h"
 
 namespace Ui {
@@ -57,6 +70,8 @@ private slots:
 	void redoClicked();
 	void queueCleared();
 
+	void on_actionAbout_triggered();
+
 private:
 	void createActions();
 	void createMenus();
@@ -66,6 +81,7 @@ private:
 	FilterDialog *filterDialog;
 	ColoringDialog *coloringDialog;
 	FileInfoDialog *fileinfoDialog;
+	AboutDialog *aboutDialog;
 	QueueDialog *queueDialog;
 	TreemapWidget *treemap;
 	QComboBox *comboPartition;
