@@ -27,7 +27,7 @@ SOURCES += main.cpp\
     detectionnode.cpp \
 	filemanager.cpp \
 	queuedialog.cpp \
-    operationqueue.cpp \
+	operationqueue.cpp \
     aboutdialog.cpp
 
 HEADERS  += mainwindow.h \
