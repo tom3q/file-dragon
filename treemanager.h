@@ -77,6 +77,7 @@ private:
 	qint64 totalUsed;
 	qint64 totalProcessed;
 	FileTree *_tree;
+	QStringList discList_;
 	bool shouldCancel;
 };
 

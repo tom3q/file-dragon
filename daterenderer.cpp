@@ -29,16 +29,28 @@ void DateRenderer::renderCell(QPainter &painter, QRectF &rect, FileNode *file)
 	int g = (OLD_G-NEW_G) * ratio + NEW_G;
 	int b = (OLD_B-NEW_B) * ratio + NEW_B;
 
-	if (widget_->isSelected(file))
-		painter.setBrush(QColor(r+HIGHLIGHT, g+HIGHLIGHT, b+HIGHLIGHT));
-	else
-		painter.setBrush(QColor(r, g, b));
-
+	painter.setBrush(QColor(r, g, b));
 	painter.drawRect(rect);
+
+	QLinearGradient grad(rect.x()+rect.width()/2, rect.y(),
+						 rect.x()+rect.width()/2, rect.y()+rect.height());
+	QRectF gradRect(rect.x()+1, rect.y()+1, rect.width()-2, rect.height()-2);
+
+	if (widget_->isSelected(file))
+	{
+		grad.setColorAt(0, QColor(255, 255, 255, 0));
+		grad.setColorAt(1, QColor(255, 255, 255, 255));
+		painter.fillRect(gradRect, grad);
+	}
+
+	grad.setColorAt(0.0, QColor(0, 0, 0, 30));
+	grad.setColorAt(0.5, QColor(0, 0, 0, 80));
+	grad.setColorAt(1.0, QColor(0, 0, 0, 30));
+	painter.fillRect(gradRect, grad);
 
 	if (file->isMarked())
 	{
-		painter.setBrush(Qt::DiagCrossPattern);
+		painter.setBrush(QColor(0, 0, 0, 50));
 		painter.drawRect(rect);
 	}
 }
@@ -55,7 +67,7 @@ void DateRenderer::renderLegend(QPainter &painter, QRectF &rect)
 	painter.drawText(QRectF(rect.width()-TEXT_WIDTH, 0, TEXT_WIDTH, rect.height()),
 		Qt::AlignLeft | Qt::AlignVCenter, "New file");
 
-	// gradient
+	// color gradient
 	QLinearGradient grad(TEXT_WIDTH+MARGIN, rect.height()/2,
 		rect.width()-TEXT_WIDTH-MARGIN, rect.height()/2);
 	QRectF gradRect(TEXT_WIDTH+MARGIN, MARGIN, rect.width()-2*(TEXT_WIDTH+MARGIN),
@@ -63,6 +75,13 @@ void DateRenderer::renderLegend(QPainter &painter, QRectF &rect)
 	grad.setColorAt(0, QColor(OLD_R, OLD_G, OLD_B));
 	grad.setColorAt(1, QColor(NEW_R, NEW_G, NEW_B));
 	painter.fillRect(gradRect, grad);
+
+	// shading gradient
+	QLinearGradient shade(rect.width()/2, MARGIN, rect.width()/2, rect.height()-MARGIN);
+	shade.setColorAt(0.0, QColor(0, 0, 0, 30));
+	shade.setColorAt(0.5, QColor(0, 0, 0, 80));
+	shade.setColorAt(1.0, QColor(0, 0, 0, 30));
+	painter.fillRect(gradRect, shade);
 
 	painter.setBrush(Qt::transparent);
 	painter.drawRect(gradRect);

@@ -60,7 +60,7 @@ qint64 OSOperations::getUsedSpace(const QString &disk)
 	return (qint64) (fiData.f_blocks-fiData.f_bfree)*fiData.f_bsize;
 }
 
-#elif defined(_WINDOWS)
+#elif defined(_WIN32)
 
 #include <QDir>
 #include <QFile>
