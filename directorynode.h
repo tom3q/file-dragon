@@ -94,7 +94,7 @@ public:
 	 */
 	inline bool empty() const
 	{
-		return files_.empty() && dirs_.empty();
+		return getSize() == 0;
 	}
 
 	/**

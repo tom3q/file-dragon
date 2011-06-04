@@ -79,7 +79,7 @@ class TreemapWidgetTest : public QObject
 			QRect alignedRect = r.toAlignedRect();
 			if (alignedRect.width() == 0 || alignedRect.height() == 0)
 				return;
-			QTest::mouseClick(widget, Qt::MouseButton::LeftButton, 0, alignedRect.center());
+			QTest::mouseClick(widget, Qt::LeftButton, 0, alignedRect.center());
 			QCOMPARE(widget->getSelectedCount(), 1);
 			QCOMPARE(widget->getSelected(0), f);
 			QCOMPARE(widget->getSelectedFiles().size(), (unsigned)1);
@@ -98,7 +98,7 @@ class TreemapWidgetTest : public QObject
 			QRect alignedRect = r.toAlignedRect();
 			if (alignedRect.width() == 0 || alignedRect.height() == 0)
 				return;
-			QTest::mouseClick(widget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::ControlModifier, r.toAlignedRect().center());
+			QTest::mouseClick(widget, Qt::LeftButton, Qt::ControlModifier, r.toAlignedRect().center());
 		}
 	};
 

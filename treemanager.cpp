@@ -46,6 +46,7 @@ void TreeManager::buildTree()
 	_tree->clear();
 	DirectoryNode *root = _tree->getRoot();
 	totalUsed = OSOperations::getUsedSpace(root->getName());
+	discList_ = OSOperations::diskList();
 	assert(totalUsed != 0);
 	totalProcessed = 0;
 
@@ -72,6 +73,17 @@ void TreeManager::scanDir(DirectoryNode *dir)
 	QString path(dir->getName());
 	QDir currentDir(path);
 	double sizeSum = 0;
+
+	// wyszukuje w¶ród listy dysków/partycji obecnego katalogu. Mo¿na to przyspieszyæ
+	// poprzez trzymanie informacji o partycjach w hashmapie (czas wyszukiwania O(1)).
+	// Mimo, ¿e nie jest to najszybsza inmplementacja, praktycznie nie spowalnia
+	// przeszukiwania.
+	QStringList::const_iterator it;
+	for (it = discList_.constBegin(); it != discList_.constEnd(); ++it)
+	{
+		if (_tree->getRoot()->getName() != *it && *it == currentDir.absolutePath())
+			return;
+	}
 
 	currentDir.setFilter( QDir::Files | QDir::NoSymLinks );
 	{
