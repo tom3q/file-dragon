@@ -1,0 +1,1 @@
+File Dragon is Linux/Windows application for rapid disc space recovery and visualising used disc space.
